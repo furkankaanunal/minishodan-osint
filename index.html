@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RECON // SYSTEM_INTEL</title>
+    <title>RECON // ADVANCED_INTEL_SYSTEM</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Major+Mono+Display&display=swap" rel="stylesheet">
     <style>
         :root {
-            --green: #7dff8a;
-            --green-dim: rgba(125, 255, 138, 0.2);
-            --black: #050505;
-            --gray: #1a1a1a;
-            --text-dim: #555;
-            --danger: #ff4d4d;
-            --warning: #ffb86c;
+            --green: #00ff41;
+            --green-glow: rgba(0, 255, 65, 0.3);
+            --black: #0a0a0a;
+            --gray: #151515;
+            --border: #222;
+            --danger: #ff003c;
+            --warning: #f1fa8c;
             --info: #8be9fd;
         }
 
@@ -24,626 +23,373 @@
             background-color: var(--black);
             color: var(--green);
             font-family: 'JetBrains Mono', monospace;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            line-height: 1.4;
+            margin: 0; padding: 0; overflow-x: hidden;
         }
 
-        /* --- CRT Effects --- */
+        /* --- CRT & Scanne Overlay --- */
         body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 9999;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 9999; background-size: 100% 3px, 3px 100%; pointer-events: none;
         }
 
-        body::after {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
-            z-index: 9998;
-            pointer-events: none;
-        }
+        .container { max-width: 1300px; margin: 0 auto; padding: 1rem 2rem; position: relative; z-index: 10; }
 
-        /* --- Layout --- */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 10;
-        }
-
+        /* --- Header --- */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--green-dim);
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--green); padding-bottom: 10px; margin-bottom: 30px;
+        }
+        .glitch {
+            font-family: 'Major Mono Display', monospace; font-size: 1.8rem; font-weight: bold;
+            position: relative; text-shadow: 0.05em 0 0 var(--danger), -0.05em -0.025em 0 var(--info);
+            animation: glitch 1s infinite;
         }
 
-        .brand {
-            font-family: 'Major Mono Display', monospace;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
+        /* --- Search Area --- */
+        .search-box {
+            background: var(--gray); border: 1px solid var(--green);
+            display: flex; padding: 15px; margin-bottom: 20px; box-shadow: 0 0 15px var(--green-glow);
         }
-
-        .system-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--green);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--green);
-            animation: pulse 1.5s infinite;
-        }
-
-        /* --- Hero --- */
-        .hero { margin-bottom: 3rem; }
-        .hero label { font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.5rem; }
-        .hero h1 {
-            font-family: 'Major Mono Display', monospace;
-            font-size: 3.5rem;
-            margin: 0;
-            line-height: 1;
-            text-shadow: 0 0 15px var(--green-dim);
-        }
-
-        .search-container {
-            margin-top: 2rem;
-            display: flex;
-            gap: 10px;
-            background: var(--gray);
-            padding: 10px;
-            border: 1px solid var(--green-dim);
-        }
-
-        .prompt { color: var(--green); font-weight: bold; padding: 10px 0 10px 10px; }
+        .search-box span { margin-right: 15px; font-weight: bold; }
         input {
-            flex-grow: 1;
-            background: transparent;
-            border: none;
-            color: var(--green);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.2rem;
-            outline: none;
+            background: transparent; border: none; color: var(--green); flex: 1;
+            font-family: 'JetBrains Mono'; font-size: 1.2rem; outline: none;
         }
-
-        button {
-            background: var(--green);
-            color: var(--black);
-            border: none;
-            padding: 10px 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
+        .btn-scan {
+            background: var(--green); color: var(--black); border: none;
+            padding: 0 25px; font-weight: bold; cursor: pointer; text-transform: uppercase;
         }
+        .btn-scan:hover { background: #fff; box-shadow: 0 0 20px #fff; }
 
-        button:hover { background: #fff; box-shadow: 0 0 20px var(--green); }
-
-        .presets { margin-top: 1rem; display: flex; gap: 10px; }
-        .chip {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border: 1px solid var(--green-dim);
-            cursor: pointer;
+        /* --- Tabs --- */
+        .tabs { display: flex; gap: 5px; margin-bottom: -1px; }
+        .tab-btn {
+            background: var(--gray); border: 1px solid var(--border); color: var(--green);
+            padding: 10px 20px; cursor: pointer; font-size: 0.8rem; border-bottom: none;
         }
-        .chip:hover { background: var(--green-dim); }
+        .tab-btn.active { background: var(--black); border-color: var(--green); border-bottom: 1px solid var(--black); z-index: 11; }
 
-        /* --- Progress & Logs --- */
-        #loading-bar-container {
-            height: 2px;
-            background: var(--gray);
-            margin-top: 1rem;
-            display: none;
-            position: relative;
-            overflow: hidden;
+        /* --- Panels --- */
+        .panel {
+            background: var(--black); border: 1px solid var(--green); padding: 25px;
+            margin-bottom: 30px; display: none; min-height: 400px;
         }
-        #loading-bar {
-            height: 100%;
-            background: var(--green);
-            width: 30%;
-            position: absolute;
-            animation: slide 2s infinite linear;
+        .panel.active { display: block; animation: fadeInUp 0.4s ease; }
+        
+        .panel-header {
+            display: flex; justify-content: space-between; margin-bottom: 20px;
+            border-bottom: 1px solid var(--green-glow); padding-bottom: 10px;
         }
+        .panel-title { font-weight: bold; text-transform: uppercase; }
 
-        #console {
-            background: rgba(0,0,0,0.5);
-            border-left: 2px solid var(--green-dim);
-            padding: 1rem;
-            height: 150px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            display: none;
-        }
-        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #111; }
-        .log-time { color: var(--text-dim); margin-right: 10px; }
-
-        /* --- Dashboard Grid --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 2rem;
-            display: none;
+        /* --- Stats Grid --- */
+        .stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px; margin-bottom: 30px;
         }
         .stat-card {
-            background: var(--gray);
-            padding: 15px;
-            border-left: 3px solid var(--green);
+            border: 1px solid var(--border); padding: 15px; position: relative;
+            background: linear-gradient(45deg, transparent, rgba(0,255,65,0.02));
         }
-        .stat-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; }
-        .stat-value { font-size: 1.8rem; font-weight: bold; }
+        .stat-card::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 3px; background: var(--green); }
+        .stat-label { font-size: 0.6rem; color: #666; text-transform: uppercase; }
+        .stat-val { font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
 
-        .module-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            display: none;
+        /* --- Components --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); font-size: 0.75rem; color: #888; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; word-break: break-all; }
+        
+        .badge {
+            padding: 3px 8px; border-radius: 2px; font-size: 0.7rem; font-weight: bold;
+            display: inline-block; margin: 2px; border: 1px solid transparent;
         }
-        .full-width { grid-column: span 2; }
+        .badge-secure { border-color: var(--green); color: var(--green); }
+        .badge-danger { border-color: var(--danger); color: var(--danger); }
+        .badge-warn { border-color: var(--warning); color: var(--warning); }
+        .badge-tech { background: var(--green-glow); color: #fff; }
 
-        .panel {
-            background: rgba(10, 10, 10, 0.8);
-            border: 1px solid var(--green-dim);
-            padding: 20px;
-            position: relative;
+        .log-box {
+            background: #000; height: 120px; overflow-y: auto; padding: 15px;
+            font-size: 0.75rem; border: 1px solid #222; margin-bottom: 20px;
         }
-        /* Brackets */
-        .panel::before {
-            content: ""; position: absolute; top: -1px; left: -1px;
-            width: 15px; height: 15px; border-top: 2px solid var(--green); border-left: 2px solid var(--green);
+        .log-line { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
+
+        #export-btn { margin-top: 20px; background: transparent; border: 1px solid var(--info); color: var(--info); padding: 5px 15px; cursor: pointer; }
+        #export-btn:hover { background: var(--info); color: #000; }
+
+        /* --- Animations --- */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
-        .panel::after {
-            content: ""; position: absolute; bottom: -1px; right: -1px;
-            width: 15px; height: 15px; border-bottom: 2px solid var(--green); border-right: 2px solid var(--green);
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--green-dim);
-            padding-bottom: 5px;
-        }
-        .panel-title { text-transform: uppercase; font-weight: bold; font-size: 0.9rem; }
-        .panel-meta { font-size: 0.6rem; color: var(--text-dim); }
-
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { text-align: left; color: var(--text-dim); padding: 8px; border-bottom: 1px solid var(--gray); }
-        td { padding: 8px; border-bottom: 1px solid var(--gray); word-break: break-all; }
-
-        .pill {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            margin-right: 4px;
-            margin-bottom: 4px;
-            background: var(--gray);
-        }
-        .pill.A, .pill.AAAA { color: var(--green); border: 1px solid var(--green); }
-        .pill.MX, .pill.NS, .pill.CNAME { color: var(--info); border: 1px solid var(--info); }
-        .pill.TXT { color: var(--warning); border: 1px solid var(--warning); }
-        .pill.tech { background: var(--green-dim); color: var(--green); }
-        .pill.expired { color: var(--danger); border: 1px solid var(--danger); }
-
-        .subdomains-list { display: flex; flex-wrap: wrap; gap: 5px; }
-        .sub-badge { padding: 2px 6px; background: #111; border: 1px solid #333; font-size: 0.7rem; }
-        .sub-badge.highlight { border-color: var(--green); color: var(--green); }
-
-        .empty-state { font-style: italic; color: var(--text-dim); font-size: 0.8rem; }
-
-        /* Animations */
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        @keyframes slide { 0% { left: -30%; } 100% { left: 100%; } }
-        .fade-in { animation: fadeInUp 0.5s ease forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--black); }
-        ::-webkit-scrollbar-thumb { background: var(--green-dim); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--green); }
-
-        @media (max-width: 768px) {
-            .module-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-            .hero h1 { font-size: 2rem; }
-        }
+        .hidden { display: none; }
+        .loading-bar { height: 2px; background: var(--green); width: 0%; transition: width 0.3s; margin-bottom: 10px; box-shadow: 0 0 10px var(--green); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <div class="brand">recon//</div>
-            <div class="system-status">
-                <span id="utc-clock">00:00:00 UTC</span>
-                <span class="dot"></span>
-                <span>System Online</span>
-            </div>
-        </header>
-
-        <section class="hero">
-            <label>[ INITIATE SCAN ]</label>
-            <h1>TARGET ACQUISITION</h1>
-            <p style="color: var(--text-dim); margin-top: 5px;">Passive reconnaissance & domain intelligence harvester.</p>
-            
-            <div class="search-container">
-                <span class="prompt">$</span>
-                <input type="text" id="target-input" placeholder="enter_domain_name..." autocomplete="off" spellcheck="false">
-                <button id="scan-btn">Scan</button>
-            </div>
-            <div class="presets">
-                <span class="chip" onclick="quickScan('github.com')">github.com</span>
-                <span class="chip" onclick="quickScan('anthropic.com')">anthropic.com</span>
-                <span class="chip" onclick="quickScan('tesla.com')">tesla.com</span>
-                <span class="chip" onclick="quickScan('nasa.gov')">nasa.gov</span>
-            </div>
-
-            <div id="loading-bar-container"><div id="loading-bar"></div></div>
-            <div id="console"></div>
-        </section>
-
-        <div class="stats-grid" id="stats-grid">
-            <div class="stat-card"><div class="stat-label">Subdomains</div><div class="stat-value" id="stat-subs">0</div></div>
-            <div class="stat-card"><div class="stat-label">DNS Records</div><div class="stat-value" id="stat-dns">0</div></div>
-            <div class="stat-card"><div class="stat-label">IP Addrs</div><div class="stat-value" id="stat-ips">0</div></div>
-            <div class="stat-card"><div class="stat-label">Mail Servers</div><div class="stat-value" id="stat-mx">0</div></div>
-            <div class="stat-card"><div class="stat-label">Technologies</div><div class="stat-value" id="stat-tech">0</div></div>
-            <div class="stat-card"><div class="stat-label">Certificates</div><div class="stat-value" id="stat-certs">0</div></div>
+<div class="container">
+    <header>
+        <div class="glitch">RECON//PRO_v2.6</div>
+        <div style="text-align: right">
+            <div id="clock" style="font-size: 0.8rem">00:00:00 UTC</div>
+            <div style="font-size: 0.6rem; color: var(--green)">ENCRYPTED_CONNECTION_ACTIVE</div>
         </div>
+    </header>
 
-        <div class="module-grid" id="results-grid">
-            <!-- Domain Intel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">▸ domain intelligence</span>
-                    <span class="panel-meta">source: rdap.org</span>
-                </div>
-                <div id="whois-content" class="fade-in"></div>
-            </div>
-
-            <!-- Network Footprint -->
-            <div class="panel">
-                <div class="panel-header">
-                    <span class="panel-title">▸ network footprint</span>
-                    <span class="panel-meta">source: ipwho.is</span>
-                </div>
-                <div id="network-content" class="fade-in"></div>
-            </div>
-
-            <!-- DNS Records -->
-            <div class="panel full-width">
-                <div class="panel-header">
-                    <span class="panel-title">▸ dns records</span>
-                    <span class="panel-meta">source: dns.google</span>
-                </div>
-                <table id="dns-table">
-                    <thead><tr><th>Type</th><th>Name</th><th>Value</th><th>TTL</th></tr></thead>
-                    <tbody id="dns-content"></tbody>
-                </table>
-            </div>
-
-            <!-- Subdomains -->
-            <div class="panel full-width">
-                <div class="panel-header">
-                    <span class="panel-title">▸ subdomain enumeration</span>
-                    <span class="panel-meta">source: crt.sh / hackertarget / alienvault</span>
-                </div>
-                <div id="subdomains-content" class="subdomains-list"></div>
-            </div>
-
-            <!-- Certificates -->
-            <div class="panel full-width">
-                <div class="panel-header">
-                    <span class="panel-title">▸ tls / certificate transparency</span>
-                    <span class="panel-meta">source: crt.sh</span>
-                </div>
-                <table id="cert-table">
-                    <thead><tr><th>Common Name</th><th>Issuer</th><th>Validity Start</th><th>Expiry</th><th>Status</th></tr></thead>
-                    <tbody id="cert-content"></tbody>
-                </table>
-            </div>
-
-            <!-- HTTP Fingerprint -->
-            <div class="panel full-width">
-                <div class="panel-header">
-                    <span class="panel-title">▸ http fingerprint</span>
-                    <span class="panel-meta">source: direct / corsproxy.io</span>
-                </div>
-                <div id="http-meta" style="margin-bottom: 15px;"></div>
-                <div id="tech-stack" style="margin-bottom: 15px;"></div>
-                <table id="headers-table">
-                    <thead><tr><th>Header</th><th>Value</th></tr></thead>
-                    <tbody id="headers-content"></tbody>
-                </table>
-            </div>
-        </div>
+    <div class="search-box">
+        <span>&gt;_</span>
+        <input type="text" id="target" placeholder="TARGET_DOMAIN (e.g. tesla.com)" autocomplete="off">
+        <button class="btn-scan" onclick="startRecon()">Initiate Scan</button>
     </div>
 
-    <script>
-        // --- Utilities ---
-        const $ = (id) => document.getElementById(id);
-        const escape = (str) => String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    <div id="scan-progress" class="hidden">
+        <div class="loading-bar" id="bar"></div>
+        <div class="log-box" id="logs"></div>
+    </div>
+
+    <div id="results-area" class="hidden">
+        <div class="stats">
+            <div class="stat-card"><div class="stat-label">Subdomains</div><div class="stat-val" id="stat-subs">0</div></div>
+            <div class="stat-card"><div class="stat-label">Risk Level</div><div class="stat-val" id="stat-risk">LOW</div></div>
+            <div class="stat-card"><div class="stat-label">Tech Stack</div><div class="stat-val" id="stat-tech">0</div></div>
+            <div class="stat-card"><div class="stat-label">IP Address</div><div class="stat-val" id="stat-ip">-</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('dns')">DNS_RECORDS</button>
+            <button class="tab-btn" onclick="showTab('network')">NETWORK_GEO</button>
+            <button class="tab-btn" onclick="showTab('security')">SECURITY_AUDIT</button>
+            <button class="tab-btn" onclick="showTab('subs')">SUBDOMAINS</button>
+        </div>
+
+        <div id="dns" class="panel active">
+            <div class="panel-header"><span class="panel-title">DNS Intelligence</span><span>Google_DNS_API</span></div>
+            <table>
+                <thead><tr><th>TYPE</th><th>NAME</th><th>DATA</th><th>TTL</th></tr></thead>
+                <tbody id="dns-table"></tbody>
+            </table>
+        </div>
+
+        <div id="network" class="panel">
+            <div class="panel-header"><span class="panel-title">Network Footprint</span><span>IPWhois_RDAP</span></div>
+            <div id="geo-info"></div>
+            <div id="whois-info" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;"></div>
+        </div>
+
+        <div id="security" class="panel">
+            <div class="panel-header"><span class="panel-title">Web Security Audit</span><span>HTTP_Header_Analysis</span></div>
+            <div style="margin-bottom: 20px;">
+                <h4>Security Headers Status</h4>
+                <div id="sec-headers-list"></div>
+            </div>
+            <div style="margin-top: 20px;">
+                <h4>Crawler Policy (robots.txt)</h4>
+                <pre id="robots-txt" style="background:#000; padding:10px; font-size:0.7rem; color:#888; max-height:200px; overflow:auto;"></pre>
+            </div>
+            <div style="margin-top: 20px;">
+                <h4>Technology Fingerprint</h4>
+                <div id="tech-list"></div>
+            </div>
+        </div>
+
+        <div id="subs" class="panel">
+            <div class="panel-header"><span class="panel-title">Subdomain Map</span><span>Crt.sh_HackerTarget</span></div>
+            <div id="subs-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+        </div>
+
+        <button id="export-btn" onclick="exportData()">DOWNLOAD_INTEL_REPORT.JSON</button>
+    </div>
+</div>
+
+<script>
+    const $ = id => document.getElementById(id);
+    let intelReport = {};
+
+    function updateClock() {
+        $('clock').innerText = new Date().toISOString().replace('T', ' ').split('.')[0] + ' UTC';
+    }
+    setInterval(updateClock, 1000);
+
+    function showTab(id) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        $(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function addLog(msg, type = 'info') {
+        const line = document.createElement('div');
+        line.className = 'log-line';
+        line.innerHTML = `<span style="color:#555">[${new Date().toLocaleTimeString()}]</span> <span style="color:var(--${type})">› ${msg}</span>`;
+        $('logs').appendChild(line);
+        $('logs').scrollTop = $('logs').scrollHeight;
+    }
+
+    async function startRecon() {
+        const rawDomain = $('target').value.trim();
+        const domain = rawDomain.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
+        if(!domain) return alert("Enter valid domain");
+
+        $('scan-progress').classList.remove('hidden');
+        $('results-area').classList.add('hidden');
+        $('logs').innerHTML = '';
+        $('bar').style.width = '10%';
+
+        addLog(`Initiating reconnaissance on: ${domain}`);
+        intelReport = { domain, timestamp: new Date(), data: {} };
+
+        try {
+            await runScan(domain);
+        } catch(e) {
+            addLog(`CRITICAL_ERROR: ${e.message}`, 'danger');
+        }
+    }
+
+    async function runScan(domain) {
+        const proxy = "https://corsproxy.io/?url=";
         
-        function updateClock() {
-            const now = new Date();
-            $('utc-clock').innerText = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
-        }
-        setInterval(updateClock, 1000);
+        // 1. DNS Lookup
+        addLog("Querying DNS records...");
+        const dnsTypes = ['A', 'MX', 'NS', 'TXT', 'SOA'];
+        const dnsData = await Promise.all(dnsTypes.map(t => fetch(`https://dns.google/resolve?name=${domain}&type=${t}`).then(r => r.json())));
+        const records = dnsData.flatMap(d => d.Answer || []);
+        renderDNS(records);
+        $('bar').style.width = '30%';
 
-        function log(msg, type = '') {
-            const consoleBox = $('console');
-            consoleBox.style.display = 'block';
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            const time = new Date().toISOString().split('T')[1].split('.')[0];
-            entry.innerHTML = `<span class="log-time">[${time}]</span> › ${msg}`;
-            consoleBox.appendChild(entry);
-            consoleBox.scrollTop = consoleBox.scrollHeight;
-        }
-
-        async function fetchWithTimeout(url, options = {}, timeout = 15000) {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeout);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(id);
-                return response;
-            } catch (e) {
-                clearTimeout(id);
-                throw e;
-            }
+        // 2. Network Geo
+        const aRecord = records.find(r => r.type === 1);
+        if(aRecord) {
+            addLog(`Locating IP: ${aRecord.data}`);
+            const geo = await fetch(`https://ipwho.is/${aRecord.data}`).then(r => r.json());
+            renderNetwork(geo, domain);
+            $('stat-ip').innerText = aRecord.data;
         }
 
-        function cleanDomain(domain) {
-            return domain.toLowerCase().replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0].trim();
-        }
+        // 3. Subdomains (CRT.SH & HackerTarget)
+        addLog("Mining Certificate Transparency logs (crt.sh)...");
+        try {
+            const [crt, ht] = await Promise.all([
+                fetch(`https://crt.sh/?q=%25.${domain}&output=json`).then(r => r.json()).catch(() => []),
+                fetch(`https://api.hackertarget.com/hostsearch/?q=${domain}`).then(r => r.text()).catch(() => "")
+            ]);
+            const subSet = new Set();
+            crt.forEach(c => c.name_value.split('\n').forEach(n => subSet.add(n.toLowerCase().replace('*.', ''))));
+            ht.split('\n').forEach(line => subSet.add(line.split(',')[0]));
+            renderSubs(Array.from(subSet));
+            $('stat-subs').innerText = subSet.size;
+        } catch(e) { addLog("Subdomain enumeration partially failed", "warning"); }
+        $('bar').style.width = '60%';
 
-        // --- Core Scrapers ---
-
-        async function getDNS(domain) {
-            const types = ['A', 'AAAA', 'MX', 'NS', 'CNAME', 'TXT', 'SOA'];
-            log(`resolving dns records via dns.google...`);
-            const results = await Promise.all(types.map(type => 
-                fetch(`https://dns.google/resolve?name=${domain}&type=${type}`).then(r => r.json())
-            ));
-            return results.flatMap(r => r.Answer || []);
-        }
-
-        async function getSubdomains(domain) {
-            log(`enumerating subdomains (multi-source)...`);
-            const subs = new Set();
-            subs.add(domain);
-
-            // 1. HackerTarget
-            try {
-                const ht = await fetchWithTimeout(`https://api.hackertarget.com/hostsearch/?q=${domain}`).then(r => r.text());
-                ht.split('\n').forEach(line => {
-                    const parts = line.split(',');
-                    if (parts[0]) subs.add(parts[0]);
-                });
-                log(`› hackertarget: found entries`);
-            } catch(e) { log(`› hackertarget: failed or blocked`); }
-
-            // 2. AlienVault
-            try {
-                const av = await fetchWithTimeout(`https://otx.alienvault.com/api/v1/indicators/domain/${domain}/passive_dns`).then(r => r.json());
-                if (av.passive_dns) av.passive_dns.forEach(item => subs.add(item.hostname));
-                log(`› alienvault: extracted ${av.count || 0} indicators`);
-            } catch(e) { log(`› alienvault: unreachable`); }
-
-            // 3. crt.sh (Slowest)
-            try {
-                const certs = await fetchWithTimeout(`https://crt.sh/?q=%25.${domain}&output=json`, {}, 25000).then(r => r.json());
-                certs.forEach(c => {
-                    c.name_value.split('\n').forEach(n => subs.add(n.replace('*.', '')));
-                });
-                log(`› crt.sh: merged cert transparency logs`);
-                return { subs: Array.from(subs), certs: certs };
-            } catch(e) { 
-                log(`› crt.sh: timeout/unavailable`); 
-                return { subs: Array.from(subs), certs: [] };
-            }
-        }
-
-        async function getWhois(domain) {
-            log(`requesting rdap registry data...`);
-            try {
-                const res = await fetch(`https://rdap.org/domain/${domain}`);
-                if (!res.ok) throw new Error();
-                return await res.json();
-            } catch(e) {
-                log(`› rdap failed. synthesizing from dns data...`, 'warning');
-                return null;
-            }
-        }
-
-        async function getGeo(ip) {
-            try {
-                return await fetch(`https://ipwho.is/${ip}`).then(r => r.json());
-            } catch(e) { return null; }
-        }
-
-        async function getFingerprint(domain) {
-            log(`analyzing http fingerprint...`);
-            const url = `https://${domain}`;
-            const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(url)}`;
+        // 4. Security Audit & Tech Stack
+        addLog("Analyzing HTTP Security Headers...");
+        try {
+            const targetUrl = `https://${domain}`;
+            const res = await fetch(`${proxy}${encodeURIComponent(targetUrl)}`);
+            const headers = Array.from(res.headers.entries());
+            const body = await res.text();
+            analyzeSecurity(headers, body);
             
-            try {
-                const res = await fetchWithTimeout(proxyUrl);
-                const headers = Array.from(res.headers.entries());
-                const body = await res.text();
-                
-                const techs = [];
-                const headerStr = headers.map(h => h.join(' ')).join(' ').toLowerCase();
-                const bodyStr = body.toLowerCase();
+            // robots.txt
+            addLog("Checking crawler directives...");
+            const robRes = await fetch(`${proxy}${encodeURIComponent(targetUrl + '/robots.txt')}`);
+            $('robots-txt').innerText = robRes.ok ? await robRes.text() : "robots.txt not found";
+        } catch(e) { addLog("HTTP Fingerprinting blocked by CORS/Target", "warning"); }
 
-                // Detection Logic
-                if (headerStr.includes('cloudflare')) techs.push('Cloudflare');
-                if (headerStr.includes('nginx')) techs.push('Nginx');
-                if (headerStr.includes('apache')) techs.push('Apache');
-                if (headerStr.includes('wp-') || bodyStr.includes('wp-content')) techs.push('WordPress');
-                if (bodyStr.includes('react')) techs.push('React');
-                if (bodyStr.includes('googletagmanager')) techs.push('Google Tag Manager');
-                if (headerStr.includes('server: vercel')) techs.push('Vercel');
-                if (headerStr.includes('x-powered-by: express')) techs.push('Express.js');
-                if (bodyStr.includes('bootstrap')) techs.push('Bootstrap');
-                if (headerStr.includes('x-drupal-cache')) techs.push('Drupal');
+        addLog("RECON COMPLETE. Data aggregated.", "green");
+        $('bar').style.width = '100%';
+        $('results-area').classList.remove('hidden');
+    }
 
-                return { status: res.status, url: res.url, headers, techs };
-            } catch(e) {
-                log(`› fingerprinting failed (cors/timeout)`);
-                return null;
-            }
-        }
+    function renderDNS(records) {
+        const types = { 1:'A', 2:'NS', 5:'CNAME', 6:'SOA', 15:'MX', 16:'TXT', 28:'AAAA' };
+        $('dns-table').innerHTML = records.map(r => `
+            <tr>
+                <td><span class="badge" style="background:#333">${types[r.type] || r.type}</span></td>
+                <td>${r.name}</td>
+                <td>${r.data}</td>
+                <td>${r.TTL}</td>
+            </tr>
+        `).join('');
+        intelReport.data.dns = records;
+    }
 
-        // --- Orchestrator ---
+    function renderNetwork(geo, domain) {
+        if(!geo.success) return;
+        $('geo-info').innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px">
+                <div>
+                    <p><b>ISP:</b> ${geo.connection.isp}</p>
+                    <p><b>ASN:</b> ${geo.connection.asn}</p>
+                    <p><b>ORG:</b> ${geo.connection.org}</p>
+                </div>
+                <div>
+                    <p><b>Location:</b> ${geo.city}, ${geo.country} ${geo.flag.emoji}</p>
+                    <p><b>Lat/Long:</b> ${geo.latitude}, ${geo.longitude}</p>
+                </div>
+            </div>
+        `;
+        intelReport.data.geo = geo;
+    }
 
-        async function runScan(target) {
-            const domain = cleanDomain(target);
-            if (!domain) return;
+    function renderSubs(subs) {
+        $('subs-list').innerHTML = subs.map(s => `<span class="badge" style="border:1px solid #333">${s}</span>`).join('');
+        intelReport.data.subdomains = subs;
+    }
 
-            // Reset UI
-            $('stats-grid').style.display = 'none';
-            $('results-grid').style.display = 'none';
-            $('console').innerHTML = '';
-            $('loading-bar-container').style.display = 'block';
-            
-            log(`target locked: ${domain}`);
+    function analyzeSecurity(headers, body) {
+        const secHeaders = [
+            'Content-Security-Policy', 'Strict-Transport-Security', 'X-Frame-Options', 
+            'X-Content-Type-Options', 'Referrer-Policy', 'Permissions-Policy'
+        ];
+        const hMap = new Map(headers.map(([k, v]) => [k.toLowerCase(), v]));
+        
+        let riskScore = 0;
+        let html = '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">';
+        secHeaders.forEach(sh => {
+            const val = hMap.get(sh.toLowerCase());
+            const status = val ? 'badge-secure' : 'badge-danger';
+            if(!val) riskScore++;
+            html += `<div class="badge ${status}">${sh}: ${val ? 'PROTECTED' : 'MISSING'}</div>`;
+        });
+        html += '</div>';
+        $('sec-headers-list').innerHTML = html;
+        $('stat-risk').innerText = riskScore > 3 ? 'HIGH' : (riskScore > 0 ? 'MEDIUM' : 'LOW');
+        $('stat-risk').style.color = riskScore > 3 ? 'var(--danger)' : 'var(--green)';
 
-            try {
-                // Parallel execution
-                const [dns, subData, whois, fingerprint] = await Promise.all([
-                    getDNS(domain),
-                    getSubdomains(domain),
-                    getWhois(domain),
-                    getFingerprint(domain)
-                ]);
+        // Tech Detection
+        const techs = [];
+        const combined = (body + JSON.stringify(headers)).toLowerCase();
+        if(combined.includes('wp-content')) techs.push('WordPress');
+        if(combined.includes('cloudflare')) techs.push('Cloudflare CDN');
+        if(combined.includes('nginx')) techs.push('Nginx Server');
+        if(combined.includes('jquery')) techs.push('jQuery');
+        if(combined.includes('react')) techs.push('React.js');
+        if(combined.includes('bootstrap')) techs.push('Bootstrap UI');
+        if(combined.includes('googletagmanager')) techs.push('Google Tag Manager');
+        
+        $('tech-list').innerHTML = techs.map(t => `<span class="badge badge-tech">${t}</span>`).join('');
+        $('stat-tech').innerText = techs.length;
+        intelReport.data.security = { riskScore, techs };
+    }
 
-                log(`scan complete. rendering modules.`);
-                
-                // 1. DNS Render
-                const dnsBody = $('dns-content');
-                dnsBody.innerHTML = dns.map(r => `
-                    <tr>
-                        <td><span class="pill ${r.type}">${r.type}</span></td>
-                        <td>${escape(r.name)}</td>
-                        <td>${escape(r.data)}</td>
-                        <td>${r.TTL}</td>
-                    </tr>
-                `).join('') || '<tr><td colspan="4" class="empty-state">No DNS records found</td></tr>';
-
-                // 2. Subdomains Render
-                const subBody = $('subdomains-content');
-                subBody.innerHTML = subData.subs.map(s => 
-                    `<span class="sub-badge ${s === domain ? 'highlight' : ''}">${escape(s)}</span>`
-                ).join('');
-
-                // 3. Stats Render
-                $('stat-dns').innerText = dns.length;
-                $('stat-subs').innerText = subData.subs.length;
-                $('stat-mx').innerText = dns.filter(r => r.type === 15).length;
-                $('stat-certs').innerText = subData.certs.length;
-                
-                // 4. Whois Render
-                const whoisBox = $('whois-content');
-                if (whois) {
-                    const registrar = whois.entities?.find(e => e.roles.includes('registrar'))?.vcardArray?.[1]?.[1]?.[3] || 'Unknown';
-                    whoisBox.innerHTML = `
-                        <div style="margin-bottom:10px"><span style="color:var(--text-dim)">Registrar:</span> ${escape(registrar)}</div>
-                        <div style="margin-bottom:10px"><span style="color:var(--text-dim)">Status:</span> ${escape(whois.status?.[0] || 'active')}</div>
-                        <div><span style="color:var(--text-dim)">Created:</span> ${whois.events?.find(e => e.eventAction === 'registration')?.eventDate || 'N/A'}</div>
-                    `;
-                } else {
-                    const soa = dns.find(r => r.type === 6);
-                    whoisBox.innerHTML = `
-                        <div class="empty-state">Synthesized from DNS (No public RDAP for TLD)</div>
-                        <div style="margin-top:10px">Primary NS: ${escape(soa?.data.split(' ')[0] || 'N/A')}</div>
-                        <div>Serial: ${escape(soa?.data.split(' ')[2] || 'N/A')}</div>
-                    `;
-                }
-
-                // 5. Network (Geo)
-                const aRecord = dns.find(r => r.type === 1);
-                const networkBox = $('network-content');
-                if (aRecord) {
-                    const geo = await getGeo(aRecord.data);
-                    if (geo && geo.success) {
-                        $('stat-ips').innerText = '1';
-                        networkBox.innerHTML = `
-                            <div>IP: ${escape(geo.ip)}</div>
-                            <div>ASN: ${escape(geo.asn)}</div>
-                            <div>Org: ${escape(geo.connection.org)}</div>
-                            <div>Loc: ${escape(geo.city)}, ${escape(geo.country)} <span style="font-size:1.2rem">${geo.flag.emoji}</span></div>
-                        `;
-                    } else { networkBox.innerHTML = `<div class="empty-state">Geo lookup failed</div>`; }
-                } else { networkBox.innerHTML = `<div class="empty-state">No A record for IP lookup</div>`; }
-
-                // 6. Certs Table
-                const certBody = $('cert-content');
-                certBody.innerHTML = subData.certs.slice(0, 20).map(c => {
-                    const isExpired = new Date(c.not_after) < new Date();
-                    return `
-                    <tr>
-                        <td>${escape(c.common_name)}</td>
-                        <td>${escape(c.issuer_name)}</td>
-                        <td>${c.not_before}</td>
-                        <td>${c.not_after}</td>
-                        <td><span class="pill ${isExpired ? 'expired' : ''}">${isExpired ? 'EXPIRED' : 'VALID'}</span></td>
-                    </tr>
-                `}).join('') || '<tr><td colspan="5" class="empty-state">No certificates found</td></tr>';
-
-                // 7. Fingerprint
-                if (fingerprint) {
-                    $('stat-tech').innerText = fingerprint.techs.length;
-                    $('http-meta').innerHTML = `<span class="pill A">HTTP ${fingerprint.status}</span> <span style="font-size:0.8rem">${fingerprint.url}</span>`;
-                    $('tech-stack').innerHTML = fingerprint.techs.map(t => `<span class="pill tech">${t}</span>`).join('');
-                    $('headers-content').innerHTML = fingerprint.headers.map(([k, v]) => `<tr><td>${escape(k)}</td><td>${escape(v)}</td></tr>`).join('');
-                } else {
-                    $('headers-content').innerHTML = '<tr><td colspan="2" class="empty-state">Fingerprinting blocked by target policy</td></tr>';
-                }
-
-                // Show Results
-                $('loading-bar-container').style.display = 'none';
-                $('stats-grid').style.display = 'grid';
-                $('results-grid').style.display = 'grid';
-                window.scrollTo({ top: 400, behavior: 'smooth' });
-
-            } catch (err) {
-                log(`fatal error: ${err.message}`, 'danger');
-                $('loading-bar-container').style.display = 'none';
-            }
-        }
-
-        function quickScan(d) {
-            $('target-input').value = d;
-            runScan(d);
-        }
-
-        $('scan-btn').onclick = () => runScan($('target-input').value);
-        $('target-input').onkeypress = (e) => { if(e.key === 'Enter') runScan($('target-input').value); };
-    </script>
+    function exportData() {
+        const blob = new Blob([JSON.stringify(intelReport, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `recon_${intelReport.domain}.json`;
+        a.click();
+    }
+</script>
 </body>
 </html>
