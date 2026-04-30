@@ -1,0 +1,1 @@
+Some modules depend on public API availability and browser-side CORS behavior. DNS, passive subdomain enumeration, RDAP/DNS fallback, ASN/geo enrichment, and certificate transparency work client-side. HTTP fingerprinting may be unavailable for targets that block browser-origin or proxy-based requests.
