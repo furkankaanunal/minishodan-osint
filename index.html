@@ -3,393 +3,619 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RECON // ADVANCED_INTEL_SYSTEM</title>
+    <title>RECON // OSINT Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Major+Mono+Display&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Major+Mono+Display&display=swap" rel="stylesheet">
     <style>
         :root {
-            --green: #00ff41;
-            --green-glow: rgba(0, 255, 65, 0.3);
-            --black: #0a0a0a;
-            --gray: #151515;
-            --border: #222;
-            --danger: #ff003c;
-            --warning: #f1fa8c;
-            --info: #8be9fd;
+            --bg: #050505;
+            --green: #7dff8a;
+            --green-dim: rgba(125, 255, 138, 0.2);
+            --green-glow: rgba(125, 255, 138, 0.5);
+            --amber: #ffb86c;
+            --blue: #8be9fd;
+            --red: #ff5555;
+            --border: 1px solid var(--green-dim);
         }
 
         * { box-sizing: border-box; }
         body {
-            background-color: var(--black);
+            background-color: var(--bg);
             color: var(--green);
             font-family: 'JetBrains Mono', monospace;
-            margin: 0; padding: 0; overflow-x: hidden;
+            margin: 0;
+            overflow-x: hidden;
+            line-height: 1.5;
+            padding-bottom: 50px;
         }
 
-        /* --- CRT & Scanne Overlay --- */
+        /* --- CRT EFFECT --- */
         body::before {
-            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 9999; background-size: 100% 3px, 3px 100%; pointer-events: none;
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
         }
 
-        .container { max-width: 1300px; margin: 0 auto; padding: 1rem 2rem; position: relative; z-index: 10; }
-
-        /* --- Header --- */
-        header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--green); padding-bottom: 10px; margin-bottom: 30px;
-        }
-        .glitch {
-            font-family: 'Major Mono Display', monospace; font-size: 1.8rem; font-weight: bold;
-            position: relative; text-shadow: 0.05em 0 0 var(--danger), -0.05em -0.025em 0 var(--info);
-            animation: glitch 1s infinite;
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+            z-index: 9998;
+            pointer-events: none;
         }
 
-        /* --- Search Area --- */
-        .search-box {
-            background: var(--gray); border: 1px solid var(--green);
-            display: flex; padding: 15px; margin-bottom: 20px; box-shadow: 0 0 15px var(--green-glow);
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--green); }
+
+        /* --- LAYOUT --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        
+        /* --- TOP BAR --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: var(--border);
+            margin-bottom: 40px;
         }
-        .search-box span { margin-right: 15px; font-weight: bold; }
+        .brand { font-family: 'Major Mono Display', monospace; font-size: 1.5rem; letter-spacing: -1px; }
+        .system-status { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
+        .dot { 
+            width: 8px; height: 8px; background: var(--green); border-radius: 50%; 
+            box-shadow: 0 0 10px var(--green); animation: pulse 1.5s infinite;
+        }
+
+        /* --- HERO --- */
+        .hero { text-align: center; margin-bottom: 60px; }
+        .label-sm { font-size: 0.7rem; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; }
+        h1 { font-family: 'Major Mono Display', monospace; font-size: clamp(2rem, 6vw, 4rem); margin: 10px 0; }
+        
+        .search-container {
+            max-width: 700px; margin: 30px auto;
+            display: flex; background: #000; border: 1px solid var(--green);
+            padding: 5px; position: relative;
+        }
+        .prompt { padding: 10px 15px; font-weight: bold; }
         input {
-            background: transparent; border: none; color: var(--green); flex: 1;
-            font-family: 'JetBrains Mono'; font-size: 1.2rem; outline: none;
+            flex-grow: 1; background: transparent; border: none; outline: none;
+            color: var(--green); font-family: 'JetBrains Mono'; font-size: 1.1rem; padding: 10px 0;
         }
-        .btn-scan {
-            background: var(--green); color: var(--black); border: none;
-            padding: 0 25px; font-weight: bold; cursor: pointer; text-transform: uppercase;
+        .scan-btn {
+            background: var(--green); color: #000; border: none; font-weight: bold;
+            padding: 0 30px; cursor: pointer; transition: 0.2s;
         }
-        .btn-scan:hover { background: #fff; box-shadow: 0 0 20px #fff; }
-
-        /* --- Tabs --- */
-        .tabs { display: flex; gap: 5px; margin-bottom: -1px; }
-        .tab-btn {
-            background: var(--gray); border: 1px solid var(--border); color: var(--green);
-            padding: 10px 20px; cursor: pointer; font-size: 0.8rem; border-bottom: none;
-        }
-        .tab-btn.active { background: var(--black); border-color: var(--green); border-bottom: 1px solid var(--black); z-index: 11; }
-
-        /* --- Panels --- */
-        .panel {
-            background: var(--black); border: 1px solid var(--green); padding: 25px;
-            margin-bottom: 30px; display: none; min-height: 400px;
-        }
-        .panel.active { display: block; animation: fadeInUp 0.4s ease; }
+        .scan-btn:hover { background: #fff; box-shadow: 0 0 15px #fff; }
         
-        .panel-header {
-            display: flex; justify-content: space-between; margin-bottom: 20px;
-            border-bottom: 1px solid var(--green-glow); padding-bottom: 10px;
+        .presets { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .chip { 
+            font-size: 0.7rem; border: 1px solid var(--green-dim); padding: 4px 10px; 
+            cursor: pointer; opacity: 0.8; 
         }
-        .panel-title { font-weight: bold; text-transform: uppercase; }
+        .chip:hover { border-color: var(--green); opacity: 1; }
 
-        /* --- Stats Grid --- */
-        .stats {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px; margin-bottom: 30px;
+        /* --- CONSOLE --- */
+        #console-panel { 
+            background: rgba(0,0,0,0.8); border: var(--border); padding: 15px; 
+            margin-bottom: 40px; display: none; position: relative;
         }
-        .stat-card {
-            border: 1px solid var(--border); padding: 15px; position: relative;
-            background: linear-gradient(45deg, transparent, rgba(0,255,65,0.02));
-        }
-        .stat-card::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 3px; background: var(--green); }
-        .stat-label { font-size: 0.6rem; color: #666; text-transform: uppercase; }
-        .stat-val { font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
+        #console-log { height: 150px; overflow-y: auto; font-size: 0.85rem; font-family: 'JetBrains Mono'; color: #aaa; }
+        .log-entry { margin-bottom: 4px; }
+        .log-entry.active { color: var(--green); }
+        .progress-bar-container { height: 2px; background: var(--green-dim); margin-bottom: 10px; width: 100%; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--green); width: 0%; transition: width 0.3s; }
+        .progress-bar-fill.loading { animation: load 2s infinite linear; width: 30%; }
 
-        /* --- Components --- */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); font-size: 0.75rem; color: #888; }
-        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.85rem; word-break: break-all; }
+        /* --- RESULTS GRID --- */
+        #results { display: none; animation: fadeUp 0.6s ease-out; }
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            gap: 15px; margin-bottom: 40px; 
+        }
+        .stat-card { 
+            background: rgba(125, 255, 138, 0.03); border: var(--border); 
+            border-left: 3px solid var(--green); padding: 15px; 
+        }
+        .stat-val { font-size: 1.8rem; font-weight: bold; margin: 5px 0; }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; opacity: 0.7; }
+        .stat-sub { font-size: 0.65rem; opacity: 0.5; }
+
+        /* --- MODULES --- */
+        .module { 
+            border: var(--border); position: relative; margin-bottom: 30px; 
+            background: rgba(125,255,138,0.01);
+        }
+        .module-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 15px; border-bottom: var(--border); background: rgba(125,255,138,0.05);
+        }
+        .module-title { font-weight: bold; text-transform: uppercase; font-size: 0.85rem; }
+        .module-source { font-size: 0.65rem; opacity: 0.5; }
+        .module-body { padding: 15px; overflow-x: auto; }
+
+        /* Corner Brackets */
+        .module::before, .module::after {
+            content: ""; position: absolute; width: 10px; height: 10px;
+            border-color: var(--green); border-style: solid; pointer-events: none;
+        }
+        .module::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .module::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+        .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .col-half { flex: 1; min-width: 300px; }
+
+        /* --- UI ELEMENTS --- */
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { text-align: left; opacity: 0.5; padding: 8px; border-bottom: 1px solid var(--green-dim); font-weight: normal; }
+        td { padding: 8px; border-bottom: 1px solid rgba(125,255,138,0.05); }
         
-        .badge {
-            padding: 3px 8px; border-radius: 2px; font-size: 0.7rem; font-weight: bold;
-            display: inline-block; margin: 2px; border: 1px solid transparent;
+        .pill { 
+            padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; 
+            display: inline-block; margin-right: 5px;
         }
-        .badge-secure { border-color: var(--green); color: var(--green); }
-        .badge-danger { border-color: var(--danger); color: var(--danger); }
-        .badge-warn { border-color: var(--warning); color: var(--warning); }
-        .badge-tech { background: var(--green-glow); color: #fff; }
+        .pill-a { background: var(--green-dim); color: var(--green); }
+        .pill-mx { background: rgba(139, 233, 253, 0.2); color: var(--blue); }
+        .pill-txt { background: rgba(255, 184, 108, 0.2); color: var(--amber); }
+        .badge { background: #111; border: 1px solid var(--green-dim); padding: 2px 6px; margin: 2px; font-size: 0.7rem; display: inline-block;}
+        .badge.highlight { border-color: var(--green); color: var(--white); background: rgba(125,255,138,0.1); }
+        .badge.expired { border-color: var(--red); color: var(--red); }
+        
+        .dim { opacity: 0.4; font-style: italic; }
 
-        .log-box {
-            background: #000; height: 120px; overflow-y: auto; padding: 15px;
-            font-size: 0.75rem; border: 1px solid #222; margin-bottom: 20px;
+        /* --- ANIMATIONS --- */
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @keyframes load { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .brand { font-size: 1.1rem; }
+            .col-half { flex: 100%; }
         }
-        .log-line { margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
-
-        #export-btn { margin-top: 20px; background: transparent; border: 1px solid var(--info); color: var(--info); padding: 5px 15px; cursor: pointer; }
-        #export-btn:hover { background: var(--info); color: #000; }
-
-        /* --- Animations --- */
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .hidden { display: none; }
-        .loading-bar { height: 2px; background: var(--green); width: 0%; transition: width 0.3s; margin-bottom: 10px; box-shadow: 0 0 10px var(--green); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <div class="glitch">RECON//PRO_v2.6</div>
-        <div style="text-align: right">
-            <div id="clock" style="font-size: 0.8rem">00:00:00 UTC</div>
-            <div style="font-size: 0.6rem; color: var(--green)">ENCRYPTED_CONNECTION_ACTIVE</div>
-        </div>
-    </header>
-
-    <div class="search-box">
-        <span>&gt;_</span>
-        <input type="text" id="target" placeholder="TARGET_DOMAIN (e.g. tesla.com)" autocomplete="off">
-        <button class="btn-scan" onclick="startRecon()">Initiate Scan</button>
-    </div>
-
-    <div id="scan-progress" class="hidden">
-        <div class="loading-bar" id="bar"></div>
-        <div class="log-box" id="logs"></div>
-    </div>
-
-    <div id="results-area" class="hidden">
-        <div class="stats">
-            <div class="stat-card"><div class="stat-label">Subdomains</div><div class="stat-val" id="stat-subs">0</div></div>
-            <div class="stat-card"><div class="stat-label">Risk Level</div><div class="stat-val" id="stat-risk">LOW</div></div>
-            <div class="stat-card"><div class="stat-label">Tech Stack</div><div class="stat-val" id="stat-tech">0</div></div>
-            <div class="stat-card"><div class="stat-label">IP Address</div><div class="stat-val" id="stat-ip">-</div></div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('dns')">DNS_RECORDS</button>
-            <button class="tab-btn" onclick="showTab('network')">NETWORK_GEO</button>
-            <button class="tab-btn" onclick="showTab('security')">SECURITY_AUDIT</button>
-            <button class="tab-btn" onclick="showTab('subs')">SUBDOMAINS</button>
-        </div>
-
-        <div id="dns" class="panel active">
-            <div class="panel-header"><span class="panel-title">DNS Intelligence</span><span>Google_DNS_API</span></div>
-            <table>
-                <thead><tr><th>TYPE</th><th>NAME</th><th>DATA</th><th>TTL</th></tr></thead>
-                <tbody id="dns-table"></tbody>
-            </table>
-        </div>
-
-        <div id="network" class="panel">
-            <div class="panel-header"><span class="panel-title">Network Footprint</span><span>IPWhois_RDAP</span></div>
-            <div id="geo-info"></div>
-            <div id="whois-info" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;"></div>
-        </div>
-
-        <div id="security" class="panel">
-            <div class="panel-header"><span class="panel-title">Web Security Audit</span><span>HTTP_Header_Analysis</span></div>
-            <div style="margin-bottom: 20px;">
-                <h4>Security Headers Status</h4>
-                <div id="sec-headers-list"></div>
+    <div class="container">
+        <nav>
+            <div class="brand">recon//_</div>
+            <div class="system-status">
+                <span id="utc-clock">00:00:00 UTC</span>
+                <span class="dot"></span>
+                <span>SYSTEM ONLINE</span>
             </div>
-            <div style="margin-top: 20px;">
-                <h4>Crawler Policy (robots.txt)</h4>
-                <pre id="robots-txt" style="background:#000; padding:10px; font-size:0.7rem; color:#888; max-height:200px; overflow:auto;"></pre>
-            </div>
-            <div style="margin-top: 20px;">
-                <h4>Technology Fingerprint</h4>
-                <div id="tech-list"></div>
-            </div>
-        </div>
+        </nav>
 
-        <div id="subs" class="panel">
-            <div class="panel-header"><span class="panel-title">Subdomain Map</span><span>Crt.sh_HackerTarget</span></div>
-            <div id="subs-list" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
-        </div>
-
-        <button id="export-btn" onclick="exportData()">DOWNLOAD_INTEL_REPORT.JSON</button>
-    </div>
-</div>
-
-<script>
-    const $ = id => document.getElementById(id);
-    let intelReport = {};
-
-    function updateClock() {
-        $('clock').innerText = new Date().toISOString().replace('T', ' ').split('.')[0] + ' UTC';
-    }
-    setInterval(updateClock, 1000);
-
-    function showTab(id) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        $(id).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-
-    function addLog(msg, type = 'info') {
-        const line = document.createElement('div');
-        line.className = 'log-line';
-        line.innerHTML = `<span style="color:#555">[${new Date().toLocaleTimeString()}]</span> <span style="color:var(--${type})">› ${msg}</span>`;
-        $('logs').appendChild(line);
-        $('logs').scrollTop = $('logs').scrollHeight;
-    }
-
-    async function startRecon() {
-        const rawDomain = $('target').value.trim();
-        const domain = rawDomain.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0];
-        if(!domain) return alert("Enter valid domain");
-
-        $('scan-progress').classList.remove('hidden');
-        $('results-area').classList.add('hidden');
-        $('logs').innerHTML = '';
-        $('bar').style.width = '10%';
-
-        addLog(`Initiating reconnaissance on: ${domain}`);
-        intelReport = { domain, timestamp: new Date(), data: {} };
-
-        try {
-            await runScan(domain);
-        } catch(e) {
-            addLog(`CRITICAL_ERROR: ${e.message}`, 'danger');
-        }
-    }
-
-    async function runScan(domain) {
-        const proxy = "https://corsproxy.io/?url=";
-        
-        // 1. DNS Lookup
-        addLog("Querying DNS records...");
-        const dnsTypes = ['A', 'MX', 'NS', 'TXT', 'SOA'];
-        const dnsData = await Promise.all(dnsTypes.map(t => fetch(`https://dns.google/resolve?name=${domain}&type=${t}`).then(r => r.json())));
-        const records = dnsData.flatMap(d => d.Answer || []);
-        renderDNS(records);
-        $('bar').style.width = '30%';
-
-        // 2. Network Geo
-        const aRecord = records.find(r => r.type === 1);
-        if(aRecord) {
-            addLog(`Locating IP: ${aRecord.data}`);
-            const geo = await fetch(`https://ipwho.is/${aRecord.data}`).then(r => r.json());
-            renderNetwork(geo, domain);
-            $('stat-ip').innerText = aRecord.data;
-        }
-
-        // 3. Subdomains (CRT.SH & HackerTarget)
-        addLog("Mining Certificate Transparency logs (crt.sh)...");
-        try {
-            const [crt, ht] = await Promise.all([
-                fetch(`https://crt.sh/?q=%25.${domain}&output=json`).then(r => r.json()).catch(() => []),
-                fetch(`https://api.hackertarget.com/hostsearch/?q=${domain}`).then(r => r.text()).catch(() => "")
-            ]);
-            const subSet = new Set();
-            crt.forEach(c => c.name_value.split('\n').forEach(n => subSet.add(n.toLowerCase().replace('*.', ''))));
-            ht.split('\n').forEach(line => subSet.add(line.split(',')[0]));
-            renderSubs(Array.from(subSet));
-            $('stat-subs').innerText = subSet.size;
-        } catch(e) { addLog("Subdomain enumeration partially failed", "warning"); }
-        $('bar').style.width = '60%';
-
-        // 4. Security Audit & Tech Stack
-        addLog("Analyzing HTTP Security Headers...");
-        try {
-            const targetUrl = `https://${domain}`;
-            const res = await fetch(`${proxy}${encodeURIComponent(targetUrl)}`);
-            const headers = Array.from(res.headers.entries());
-            const body = await res.text();
-            analyzeSecurity(headers, body);
+        <section class="hero">
+            <div class="label-sm">[ initiate scan ]</div>
+            <h1>TARGet ACQUISITIon</h1>
+            <p class="label-sm" style="opacity: 0.5;">Enter domain for multi-vector intelligence gathering</p>
             
-            // robots.txt
-            addLog("Checking crawler directives...");
-            const robRes = await fetch(`${proxy}${encodeURIComponent(targetUrl + '/robots.txt')}`);
-            $('robots-txt').innerText = robRes.ok ? await robRes.text() : "robots.txt not found";
-        } catch(e) { addLog("HTTP Fingerprinting blocked by CORS/Target", "warning"); }
+            <form id="search-form" class="search-container">
+                <span class="prompt">$</span>
+                <input type="text" id="target-input" placeholder="example.com" autocomplete="off" autofocus>
+                <button type="submit" class="scan-btn">SCAN</button>
+            </form>
+            
+            <div class="presets">
+                <span class="chip" onclick="quickScan('github.com')">github.com</span>
+                <span class="chip" onclick="quickScan('anthropic.com')">anthropic.com</span>
+                <span class="chip" onclick="quickScan('nasa.gov')">nasa.gov</span>
+                <span class="chip" onclick="quickScan('cloudflare.com')">cloudflare.com</span>
+            </div>
+        </section>
 
-        addLog("RECON COMPLETE. Data aggregated.", "green");
-        $('bar').style.width = '100%';
-        $('results-area').classList.remove('hidden');
-    }
+        <section id="console-panel">
+            <div class="progress-bar-container"><div id="progress-bar" class="progress-bar-fill"></div></div>
+            <div id="console-log"></div>
+        </section>
 
-    function renderDNS(records) {
-        const types = { 1:'A', 2:'NS', 5:'CNAME', 6:'SOA', 15:'MX', 16:'TXT', 28:'AAAA' };
-        $('dns-table').innerHTML = records.map(r => `
-            <tr>
-                <td><span class="badge" style="background:#333">${types[r.type] || r.type}</span></td>
-                <td>${r.name}</td>
-                <td>${r.data}</td>
-                <td>${r.TTL}</td>
-            </tr>
-        `).join('');
-        intelReport.data.dns = records;
-    }
-
-    function renderNetwork(geo, domain) {
-        if(!geo.success) return;
-        $('geo-info').innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px">
-                <div>
-                    <p><b>ISP:</b> ${geo.connection.isp}</p>
-                    <p><b>ASN:</b> ${geo.connection.asn}</p>
-                    <p><b>ORG:</b> ${geo.connection.org}</p>
+        <div id="results">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Subdomains</div>
+                    <div class="stat-val" id="stat-subs">0</div>
+                    <div class="stat-sub">Enumerated via 3 sources</div>
                 </div>
-                <div>
-                    <p><b>Location:</b> ${geo.city}, ${geo.country} ${geo.flag.emoji}</p>
-                    <p><b>Lat/Long:</b> ${geo.latitude}, ${geo.longitude}</p>
+                <div class="stat-card">
+                    <div class="stat-label">DNS Records</div>
+                    <div class="stat-val" id="stat-dns">0</div>
+                    <div class="stat-sub">A, MX, NS, TXT, CNAME</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IP Addr</div>
+                    <div class="stat-val" id="stat-ips">0</div>
+                    <div class="stat-sub">Resolved endpoints</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">ASN / Geo</div>
+                    <div class="stat-val" id="stat-asn">--</div>
+                    <div class="stat-sub">Primary network host</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tech Stack</div>
+                    <div class="stat-val" id="stat-tech">0</div>
+                    <div class="stat-sub">Fingerprinted services</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Certificates</div>
+                    <div class="stat-val" id="stat-certs">0</div>
+                    <div class="stat-sub">CT transparency logs</div>
                 </div>
             </div>
-        `;
-        intelReport.data.geo = geo;
-    }
 
-    function renderSubs(subs) {
-        $('subs-list').innerHTML = subs.map(s => `<span class="badge" style="border:1px solid #333">${s}</span>`).join('');
-        intelReport.data.subdomains = subs;
-    }
+            <div class="flex-row">
+                <div class="module col-half">
+                    <div class="module-header">
+                        <div class="module-title">▸ domain intelligence</div>
+                        <div class="module-source">source: rdap.org</div>
+                    </div>
+                    <div class="module-body" id="mod-whois"></div>
+                </div>
+                <div class="module col-half">
+                    <div class="module-header">
+                        <div class="module-title">▸ network footprint</div>
+                        <div class="module-source">source: ipwho.is</div>
+                    </div>
+                    <div class="module-body" id="mod-network"></div>
+                </div>
+            </div>
 
-    function analyzeSecurity(headers, body) {
-        const secHeaders = [
-            'Content-Security-Policy', 'Strict-Transport-Security', 'X-Frame-Options', 
-            'X-Content-Type-Options', 'Referrer-Policy', 'Permissions-Policy'
-        ];
-        const hMap = new Map(headers.map(([k, v]) => [k.toLowerCase(), v]));
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">▸ dns records</div>
+                    <div class="module-source">source: dns.google</div>
+                </div>
+                <div class="module-body" id="mod-dns"></div>
+            </div>
+
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">▸ subdomain enumeration</div>
+                    <div class="module-source">source: crt.sh / hackertarget / alienvault</div>
+                </div>
+                <div class="module-body" id="mod-subdomains"></div>
+            </div>
+
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">▸ tls / certificate transparency</div>
+                    <div class="module-source">source: crt.sh</div>
+                </div>
+                <div class="module-body" id="mod-tls"></div>
+            </div>
+
+            <div class="module">
+                <div class="module-header">
+                    <div class="module-title">▸ http fingerprint</div>
+                    <div class="module-source">source: direct / corsproxy.io</div>
+                </div>
+                <div class="module-body" id="mod-http"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- HELPERS ---
+        const $ = (id) => document.getElementById(id);
+        const escape = (str) => String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
         
-        let riskScore = 0;
-        let html = '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">';
-        secHeaders.forEach(sh => {
-            const val = hMap.get(sh.toLowerCase());
-            const status = val ? 'badge-secure' : 'badge-danger';
-            if(!val) riskScore++;
-            html += `<div class="badge ${status}">${sh}: ${val ? 'PROTECTED' : 'MISSING'}</div>`;
+        function updateClock() {
+            const now = new Date();
+            $('utc-clock').innerText = now.toISOString().split('T')[1].split('.')[0] + ' UTC';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function log(msg, type = 'info') {
+            const consoleLog = $('console-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type === 'active' ? 'active' : ''}`;
+            entry.innerHTML = `› ${msg}`;
+            consoleLog.appendChild(entry);
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+
+        function cleanDomain(input) {
+            let d = input.trim().toLowerCase();
+            d = d.replace(/^(https?:\/\/)?(www\.)?/, '');
+            d = d.split('/')[0];
+            return d;
+        }
+
+        async function fetchWithTimeout(url, options = {}, timeout = 15000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(id);
+                return response;
+            } catch (e) {
+                clearTimeout(id);
+                throw e;
+            }
+        }
+
+        // --- DATA FETCHERS ---
+        async function getDNS(domain) {
+            const types = ['A', 'AAAA', 'MX', 'NS', 'TXT', 'CNAME', 'SOA'];
+            let allRecords = [];
+            for (const type of types) {
+                try {
+                    const res = await fetch(`https://dns.google/resolve?name=${domain}&type=${type}`);
+                    const json = await res.json();
+                    if (json.Answer) allRecords = [...allRecords, ...json.Answer];
+                } catch (e) {}
+            }
+            return allRecords;
+        }
+
+        async function getSubdomains(domain) {
+            log('enumerating subdomains across multiple sources...', 'active');
+            
+            const fetchCrt = async () => {
+                try {
+                    log('  → querying crt.sh (certificate transparency)...');
+                    const res = await fetchWithTimeout(`https://crt.sh/?q=%25.${domain}&output=json`, {}, 25000);
+                    const json = await res.json();
+                    return json.map(i => i.common_name.toLowerCase());
+                } catch (e) { return []; }
+            };
+
+            const fetchHT = async () => {
+                try {
+                    log('  → querying hackertarget.com hostsearch...');
+                    const res = await fetch(`https://api.hackertarget.com/hostsearch/?q=${domain}`);
+                    const text = await res.text();
+                    return text.split('\n').map(line => line.split(',')[0].toLowerCase());
+                } catch (e) { return []; }
+            };
+
+            const fetchAV = async () => {
+                try {
+                    log('  → querying alienvault otx passive dns...');
+                    const res = await fetch(`https://otx.alienvault.com/api/v1/indicators/domain/${domain}/passive_dns`);
+                    const json = await res.json();
+                    return json.passive_dns.map(i => i.hostname.toLowerCase());
+                } catch (e) { return []; }
+            };
+
+            const results = await Promise.all([fetchCrt(), fetchHT(), fetchAV()]);
+            const merged = [...new Set(results.flat())].filter(s => s.endsWith(domain) && s !== domain);
+            log(`  → found ${merged.length} unique subdomains.`);
+            return { subs: merged, certs: results[0] }; 
+        }
+
+        async function getRDAP(domain) {
+            try {
+                log('querying rdap/whois data...');
+                const res = await fetch(`https://rdap.org/domain/${domain}`);
+                if (res.status === 404) throw new Error('Not found');
+                return await res.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function getIPInfo(ip) {
+            try {
+                const res = await fetch(`https://ipwho.is/${ip}`);
+                return await res.json();
+            } catch (e) { return null; }
+        }
+
+        async function getHTTPFingerprint(domain) {
+            log('fingerprinting http service...', 'active');
+            const target = `https://${domain}`;
+            let headers = {};
+            let body = "";
+            let status = 0;
+
+            try {
+                const res = await fetchWithTimeout(`https://corsproxy.io/?url=${encodeURIComponent(target)}`);
+                status = res.status;
+                body = await res.text();
+                for (let [key, value] of res.headers.entries()) {
+                    headers[key] = value;
+                }
+            } catch (e) {
+                log('  → http connection failed (CORS/Down)');
+                return null;
+            }
+
+            const techs = [];
+            const check = (key, val, name) => { if(val && val.toLowerCase().includes(key.toLowerCase())) techs.push(name); };
+            
+            // Header Checks
+            const h = JSON.stringify(headers).toLowerCase();
+            if (h.includes('cloudflare')) techs.push('Cloudflare');
+            if (h.includes('nginx')) techs.push('Nginx');
+            if (h.includes('apache')) techs.push('Apache');
+            if (h.includes('litespeed')) techs.push('LiteSpeed');
+            if (h.includes('varnish')) techs.push('Varnish');
+            if (h.includes('drupal')) techs.push('Drupal');
+            if (h.includes('wp-')) techs.push('WordPress');
+            if (h.includes('express')) techs.push('Express');
+
+            // Body Checks
+            const b = body.toLowerCase();
+            if (b.includes('wp-content')) techs.push('WordPress');
+            if (b.includes('react')) techs.push('React');
+            if (b.includes('bootstrap')) techs.push('Bootstrap');
+            if (b.includes('jquery')) techs.push('jQuery');
+            if (b.includes('googletagmanager')) techs.push('GTM');
+            if (b.includes('google-analytics')) techs.push('Google Analytics');
+            if (b.includes('next.js')) techs.push('Next.js');
+
+            return { status, headers, techs: [...new Set(techs)], url: target };
+        }
+
+        // --- ORCHESTRATOR ---
+        async function runScan(domain) {
+            if (!domain) return;
+            
+            // Reset UI
+            $('console-panel').style.display = 'block';
+            $('results').style.display = 'none';
+            $('console-log').innerHTML = '';
+            $('progress-bar').className = 'progress-bar-fill loading';
+            
+            log(`target locked: ${domain}`);
+            
+            try {
+                // Parallel Exec
+                const [dns, subsData, rdap, http] = await Promise.all([
+                    getDNS(domain),
+                    getSubdomains(domain),
+                    getRDAP(domain),
+                    getHTTPFingerprint(domain)
+                ]);
+
+                log('resolving ip geolocation...', 'active');
+                const firstA = dns.find(r => r.type === 1);
+                const ipInfo = firstA ? await getIPInfo(firstA.data) : null;
+
+                renderResults({ domain, dns, subsData, rdap, http, ipInfo });
+                
+                log('scan complete.', 'active');
+                $('progress-bar').className = 'progress-bar-fill';
+                $('progress-bar').style.width = '100%';
+            } catch (err) {
+                log(`critical error: ${err.message}`, 'active');
+            }
+        }
+
+        function renderResults(data) {
+            $('results').style.display = 'block';
+            
+            // Stats
+            $('stat-subs').innerText = data.subsData.subs.length;
+            $('stat-dns').innerText = data.dns.length;
+            $('stat-ips').innerText = data.dns.filter(r => r.type === 1 || r.type === 28).length;
+            $('stat-certs').innerText = (data.subsData.certs || []).length;
+            $('stat-tech').innerText = (data.http?.techs || []).length;
+            $('stat-asn').innerText = data.ipInfo?.asn?.asn || '--';
+
+            // DNS Module
+            let dnsHTML = `<table><tr><th>Type</th><th>Name</th><th>Value</th><th>TTL</th></tr>`;
+            if (data.dns.length === 0) dnsHTML += `<tr><td colspan="4" class="dim">No records found</td></tr>`;
+            data.dns.forEach(r => {
+                const typeMap = { 1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 15: 'MX', 16: 'TXT', 28: 'AAAA' };
+                const t = typeMap[r.type] || r.type;
+                const pillClass = t === 'A' ? 'pill-a' : (['MX','NS','CNAME'].includes(t) ? 'pill-mx' : (t === 'TXT' ? 'pill-txt' : ''));
+                dnsHTML += `<tr>
+                    <td><span class="pill ${pillClass}">${t}</span></td>
+                    <td>${escape(r.name)}</td>
+                    <td style="word-break:break-all">${escape(r.data)}</td>
+                    <td class="dim">${r.TTL}</td>
+                </tr>`;
+            });
+            dnsHTML += `</table>`;
+            $('mod-dns').innerHTML = dnsHTML;
+
+            // Subdomains
+            let subHTML = `<div class="badge highlight">${data.domain}</div>`;
+            if (data.subsData.subs.length === 0) subHTML += `<span class="dim">None detected</span>`;
+            data.subsData.subs.sort().forEach(s => {
+                subHTML += `<div class="badge">${escape(s)}</div>`;
+            });
+            $('mod-subdomains').innerHTML = subHTML;
+
+            // Whois
+            let whoisHTML = "";
+            if (data.rdap) {
+                whoisHTML = `<div style="font-size:0.8rem">
+                    <p><b>Registrar:</b> ${escape(data.rdap.port43 || 'Unknown')}</p>
+                    <p><b>Status:</b> ${escape((data.rdap.status || []).join(', '))}</p>
+                    <p><b>Events:</b><br>${(data.rdap.events || []).map(e => `<span class="dim">${e.eventAction}: ${e.eventDate.split('T')[0]}</span>`).join('<br>')}</p>
+                </div>`;
+            } else {
+                const soa = data.dns.find(r => r.type === 6);
+                whoisHTML = `<div class="dim">No public RDAP response for this TLD.</div>
+                <div style="margin-top:10px; font-size:0.75rem; border: 1px dashed var(--green-dim); padding: 10px;">
+                    <b style="color:var(--amber)">Synthesized from DNS:</b><br>
+                    Primary NS: ${soa ? soa.data.split(' ')[0] : 'Unknown'}<br>
+                    Responsible: ${soa ? soa.data.split(' ')[1] : 'Unknown'}<br>
+                    Serial: ${soa ? soa.data.split(' ')[2] : '--'}
+                </div>`;
+            }
+            $('mod-whois').innerHTML = whoisHTML;
+
+            // Network
+            if (data.ipInfo) {
+                $('mod-network').innerHTML = `<div style="font-size:0.8rem">
+                    <p><b>IPv4:</b> ${data.ipInfo.ip}</p>
+                    <p><b>ASN:</b> ${data.ipInfo.asn?.asn} (${data.ipInfo.asn?.name})</p>
+                    <p><b>Location:</b> ${data.ipInfo.city}, ${data.ipInfo.country} <img src="${data.ipInfo.flag?.img}" width="16" style="vertical-align:middle"></p>
+                    <p><b>Organization:</b> ${data.ipInfo.connection?.org}</p>
+                </div>`;
+            } else {
+                $('mod-network').innerHTML = `<span class="dim">Could not resolve primary IP info.</span>`;
+            }
+
+            // TLS
+            let tlsHTML = `<table><tr><th>Common Name</th><th>Issuer</th><th>Validity</th></tr>`;
+            const certs = data.subsData.certs || [];
+            if (certs.length === 0) tlsHTML += `<tr><td colspan="3" class="dim">No certificate data found</td></tr>`;
+            certs.slice(0, 15).forEach(c => {
+                const isExpired = new Date(c.not_after) < new Date();
+                tlsHTML += `<tr>
+                    <td>${escape(c.common_name)}</td>
+                    <td class="dim">${escape(c.issuer_name.split('O=')[1]?.split(',')[0] || c.issuer_name)}</td>
+                    <td><span class="badge ${isExpired ? 'expired' : ''}">${c.not_after.split('T')[0]}</span></td>
+                </tr>`;
+            });
+            tlsHTML += `</table>`;
+            $('mod-tls').innerHTML = tlsHTML;
+
+            // HTTP
+            if (data.http) {
+                let techPills = data.http.techs.map(t => `<span class="pill pill-a">${t}</span>`).join('');
+                let headersTable = `<table>`;
+                Object.entries(data.http.headers).forEach(([k, v]) => {
+                    headersTable += `<tr><td class="dim" style="width:150px">${k}</td><td>${escape(v)}</td></tr>`;
+                });
+                headersTable += `</table>`;
+
+                $('mod-http').innerHTML = `
+                    <div style="margin-bottom:15px">
+                        <span class="badge highlight">HTTP ${data.http.status}</span> 
+                        <span class="dim">${data.http.url}</span>
+                    </div>
+                    <div style="margin-bottom:15px">${techPills || '<span class="dim">No specific technologies identified</span>'}</div>
+                    <details>
+                        <summary style="cursor:pointer; font-size:0.7rem; opacity:0.6; margin-bottom:10px">VIEW RESPONSE HEADERS</summary>
+                        ${headersTable}
+                    </details>
+                `;
+            } else {
+                $('mod-http').innerHTML = `<span class="dim">Service unreachable or blocked by CORS.</span>`;
+            }
+        }
+
+        // --- EVENTS ---
+        $('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = $('target-input').value;
+            const domain = cleanDomain(val);
+            if (domain) runScan(domain);
         });
-        html += '</div>';
-        $('sec-headers-list').innerHTML = html;
-        $('stat-risk').innerText = riskScore > 3 ? 'HIGH' : (riskScore > 0 ? 'MEDIUM' : 'LOW');
-        $('stat-risk').style.color = riskScore > 3 ? 'var(--danger)' : 'var(--green)';
 
-        // Tech Detection
-        const techs = [];
-        const combined = (body + JSON.stringify(headers)).toLowerCase();
-        if(combined.includes('wp-content')) techs.push('WordPress');
-        if(combined.includes('cloudflare')) techs.push('Cloudflare CDN');
-        if(combined.includes('nginx')) techs.push('Nginx Server');
-        if(combined.includes('jquery')) techs.push('jQuery');
-        if(combined.includes('react')) techs.push('React.js');
-        if(combined.includes('bootstrap')) techs.push('Bootstrap UI');
-        if(combined.includes('googletagmanager')) techs.push('Google Tag Manager');
-        
-        $('tech-list').innerHTML = techs.map(t => `<span class="badge badge-tech">${t}</span>`).join('');
-        $('stat-tech').innerText = techs.length;
-        intelReport.data.security = { riskScore, techs };
-    }
-
-    function exportData() {
-        const blob = new Blob([JSON.stringify(intelReport, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `recon_${intelReport.domain}.json`;
-        a.click();
-    }
-</script>
+        function quickScan(d) {
+            $('target-input').value = d;
+            runScan(d);
+        }
+    </script>
 </body>
 </html>
