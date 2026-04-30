@@ -30,7 +30,6 @@
     }
 
     * { box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -73,284 +72,88 @@
 
     ::selection { background: var(--green); color: #001805; }
 
-    .app {
-      width: min(1440px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 48px;
-      position: relative;
-      z-index: 1;
-    }
+    .app { width: min(1440px, calc(100% - 32px)); margin: 0 auto; padding: 24px 0 48px; position: relative; z-index: 1; }
 
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 15px 18px;
-      border: 1px solid var(--line);
-      background: rgba(3, 10, 4, 0.72);
-      box-shadow: var(--shadow);
-      border-radius: var(--radius);
-      backdrop-filter: blur(14px);
-      position: sticky;
-      top: 12px;
-      z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 18px; padding: 15px 18px;
+      border: 1px solid var(--line); background: rgba(3, 10, 4, 0.72);
+      box-shadow: var(--shadow); border-radius: var(--radius);
+      backdrop-filter: blur(14px); position: sticky; top: 12px; z-index: 10;
     }
 
     .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .brandmark {
-      color: var(--green);
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: lowercase;
-      text-shadow: 0 0 14px rgba(125, 255, 138, 0.45);
-      white-space: nowrap;
-    }
+    .brandmark { color: var(--green); font-weight: 800; letter-spacing: 0.06em; text-transform: lowercase; text-shadow: 0 0 14px rgba(125, 255, 138, 0.45); white-space: nowrap; }
     .tagline { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .system { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: 12px; white-space: nowrap; }
     .online { display: inline-flex; align-items: center; gap: 7px; color: var(--green); }
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 99px;
-      background: var(--green);
-      box-shadow: 0 0 14px rgba(125, 255, 138, 0.95);
-      animation: pulse 1.3s ease-in-out infinite;
-    }
-
+    .dot { width: 9px; height: 9px; border-radius: 99px; background: var(--green); box-shadow: 0 0 14px rgba(125, 255, 138, 0.95); animation: pulse 1.3s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.45; transform: scale(0.86); } 50% { opacity: 1; transform: scale(1.15); } }
 
     .hero {
-      margin-top: 22px;
-      padding: clamp(24px, 4vw, 48px);
-      border: 1px solid var(--line-strong);
-      border-radius: 28px;
-      background:
-        linear-gradient(120deg, rgba(125, 255, 138, 0.08), transparent 35%),
-        linear-gradient(180deg, rgba(7, 18, 9, 0.94), rgba(2, 7, 3, 0.92));
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow);
+      margin-top: 22px; padding: clamp(24px, 4vw, 48px);
+      border: 1px solid var(--line-strong); border-radius: 28px;
+      background: linear-gradient(120deg, rgba(125, 255, 138, 0.08), transparent 35%), linear-gradient(180deg, rgba(7, 18, 9, 0.94), rgba(2, 7, 3, 0.92));
+      position: relative; overflow: hidden; box-shadow: var(--shadow);
     }
 
-    .hero::before, .cornered::before {
-      content: "";
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      width: 38px;
-      height: 38px;
-      border-top: 2px solid var(--green);
-      border-left: 2px solid var(--green);
-      opacity: 0.82;
-    }
+    .hero::before, .cornered::before { content: ""; position: absolute; top: 14px; left: 14px; width: 38px; height: 38px; border-top: 2px solid var(--green); border-left: 2px solid var(--green); opacity: 0.82; }
+    .hero::after, .cornered::after { content: ""; position: absolute; right: 14px; bottom: 14px; width: 38px; height: 38px; border-right: 2px solid var(--green); border-bottom: 2px solid var(--green); opacity: 0.82; }
 
-    .hero::after, .cornered::after {
-      content: "";
-      position: absolute;
-      right: 14px;
-      bottom: 14px;
-      width: 38px;
-      height: 38px;
-      border-right: 2px solid var(--green);
-      border-bottom: 2px solid var(--green);
-      opacity: 0.82;
-    }
+    .label { display: inline-flex; color: var(--green); border: 1px solid var(--line-strong); background: var(--green-soft); padding: 7px 10px; border-radius: 999px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 22px; }
 
-    .label {
-      display: inline-flex;
-      color: var(--green);
-      border: 1px solid var(--line-strong);
-      background: var(--green-soft);
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
+    h1 { margin: 0; font-family: var(--display); font-size: clamp(38px, 7vw, 92px); line-height: 0.95; letter-spacing: -0.08em; color: #f1fff3; text-shadow: 0 0 20px rgba(125, 255, 138, 0.18); }
 
-    h1 {
-      margin: 0;
-      font-family: var(--display);
-      font-size: clamp(38px, 7vw, 92px);
-      line-height: 0.95;
-      letter-spacing: -0.08em;
-      color: #f1fff3;
-      text-shadow: 0 0 20px rgba(125, 255, 138, 0.18);
-    }
+    .lede { max-width: 880px; color: var(--muted); font-size: clamp(14px, 1.5vw, 17px); line-height: 1.8; margin: 22px 0 26px; }
 
-    .lede {
-      max-width: 880px;
-      color: var(--muted);
-      font-size: clamp(14px, 1.5vw, 17px);
-      line-height: 1.8;
-      margin: 22px 0 26px;
-    }
-
-    .search-row {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid var(--line-strong);
-      background: rgba(0, 8, 2, 0.82);
-      padding: 10px;
-      border-radius: 18px;
-      box-shadow: inset 0 0 30px rgba(125, 255, 138, 0.045);
-    }
+    .search-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; border: 1px solid var(--line-strong); background: rgba(0, 8, 2, 0.82); padding: 10px; border-radius: 18px; box-shadow: inset 0 0 30px rgba(125, 255, 138, 0.045); }
 
     .prompt { color: var(--green); font-weight: 800; padding-left: 10px; text-shadow: 0 0 12px rgba(125, 255, 138, 0.58); }
 
-    input {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: var(--text);
-      font: 600 16px/1.4 var(--mono);
-      min-height: 48px;
-    }
-
+    input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text); font: 600 16px/1.4 var(--mono); min-height: 48px; }
     input::placeholder { color: rgba(216, 255, 220, 0.34); }
     input:focus { text-shadow: 0 0 9px rgba(125, 255, 138, 0.4); }
 
-    button {
-      font-family: var(--mono);
-      cursor: pointer;
-      color: var(--text);
-      border: 1px solid var(--line-strong);
-      background: rgba(125, 255, 138, 0.09);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
-    }
+    button { font-family: var(--mono); cursor: pointer; color: var(--text); border: 1px solid var(--line-strong); background: rgba(125, 255, 138, 0.09); transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease; }
+    button:hover, button:focus-visible { transform: translateY(-1px); border-color: var(--green); box-shadow: 0 0 22px rgba(125, 255, 138, 0.14); outline: none; }
 
-    button:hover, button:focus-visible {
-      transform: translateY(-1px);
-      border-color: var(--green);
-      box-shadow: 0 0 22px rgba(125, 255, 138, 0.14);
-      outline: none;
-    }
-
-    .scan-btn {
-      min-height: 48px;
-      padding: 0 24px;
-      border-radius: 12px;
-      background: var(--green);
-      color: #001805;
-      font-weight: 900;
-      letter-spacing: 0.10em;
-      border-color: var(--green);
-      text-shadow: none;
-    }
-
+    .scan-btn { min-height: 48px; padding: 0 24px; border-radius: 12px; background: var(--green); color: #001805; font-weight: 900; letter-spacing: 0.10em; border-color: var(--green); text-shadow: none; }
     .scan-btn:disabled { opacity: 0.48; cursor: wait; transform: none; }
 
     .preset-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      color: var(--green-dim);
-      font-size: 12px;
-      background: rgba(0, 0, 0, 0.16);
-    }
+    .chip { padding: 9px 12px; border-radius: 999px; color: var(--green-dim); font-size: 12px; background: rgba(0, 0, 0, 0.16); }
 
     .loading-wrap { display: none; margin-top: 22px; }
     .loading-wrap.active { display: block; }
-    .loading-bar {
-      height: 6px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(125, 255, 138, 0.05);
-      margin-bottom: 12px;
-    }
-    .loading-bar span {
-      display: block;
-      height: 100%;
-      width: 42%;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-      animation: loadSweep 1.2s linear infinite;
-    }
+    .loading-bar { height: 6px; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: rgba(125, 255, 138, 0.05); margin-bottom: 12px; }
+    .loading-bar span { display: block; height: 100%; width: 42%; background: linear-gradient(90deg, transparent, var(--green), transparent); animation: loadSweep 1.2s linear infinite; }
     @keyframes loadSweep { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
 
-    .console {
-      max-height: 250px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(0, 5, 1, 0.88);
-      padding: 14px;
-      font-size: 12px;
-      line-height: 1.7;
-      color: var(--green-dim);
-      box-shadow: inset 0 0 26px rgba(125, 255, 138, 0.045);
-    }
+    .console { max-height: 280px; overflow: auto; border: 1px solid var(--line); border-radius: 16px; background: rgba(0, 5, 1, 0.88); padding: 14px; font-size: 12px; line-height: 1.7; color: var(--green-dim); box-shadow: inset 0 0 26px rgba(125, 255, 138, 0.045); }
 
     .console-line { white-space: pre-wrap; word-break: break-word; }
+    .console-line.ok { color: var(--green); }
     .console-line.warn { color: var(--amber); }
     .console-line.err { color: var(--red); }
+    .console-line.info { color: var(--blue); }
 
     .results { display: none; margin-top: 22px; animation: fadeUp 420ms ease both; }
     .results.ready { display: block; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 18px;
-    }
+    .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
 
-    .stat-card {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: var(--radius);
-      padding: 16px;
-      min-height: 118px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--green);
-      box-shadow: 0 0 18px rgba(125, 255, 138, 0.8);
-    }
+    .stat-card { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 16px; min-height: 118px; position: relative; overflow: hidden; box-shadow: var(--shadow); }
+    .stat-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--green); box-shadow: 0 0 18px rgba(125, 255, 138, 0.8); }
     .stat-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.10em; font-size: 11px; }
     .stat-value { color: #f4fff5; font-size: 34px; font-weight: 900; margin: 12px 0 4px; }
     .stat-sub { color: var(--dim); font-size: 12px; line-height: 1.5; }
 
-    .module-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
+    .module-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 
-    .module {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      border-radius: var(--radius);
-      padding: 18px;
-      min-height: 220px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
+    .module { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 18px; min-height: 220px; position: relative; overflow: hidden; box-shadow: var(--shadow); }
     .module.full { grid-column: 1 / -1; }
-    .module-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid rgba(125, 255, 138, 0.16);
-      padding-bottom: 12px;
-    }
+    .module-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 16px; border-bottom: 1px solid rgba(125, 255, 138, 0.16); padding-bottom: 12px; }
     .module-title { margin: 0; color: #f3fff4; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; }
     .module-title::before { content: "▸ "; color: var(--green); }
     .source { color: var(--dim); font-size: 11px; text-align: right; line-height: 1.5; }
@@ -364,20 +167,7 @@
     .table-scroll { overflow: auto; max-height: 460px; border: 1px solid rgba(125, 255, 138, 0.11); border-radius: 14px; }
     .table-scroll table tr:last-child td { border-bottom: none; }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border: 1px solid var(--line);
-      background: rgba(125, 255, 138, 0.09);
-      color: var(--green);
-      padding: 5px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      line-height: 1;
-      margin: 2px;
-      white-space: nowrap;
-    }
+    .pill { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line); background: rgba(125, 255, 138, 0.09); color: var(--green); padding: 5px 8px; border-radius: 999px; font-size: 11px; line-height: 1; margin: 2px; white-space: nowrap; }
     .pill.blue { color: var(--blue); border-color: rgba(124, 200, 255, 0.36); background: rgba(124, 200, 255, 0.09); }
     .pill.amber { color: var(--amber); border-color: rgba(255, 211, 125, 0.38); background: rgba(255, 211, 125, 0.09); }
     .pill.red { color: var(--red); border-color: rgba(255, 107, 123, 0.38); background: rgba(255, 107, 123, 0.10); }
@@ -435,6 +225,7 @@
       </div>
 
       <div class="preset-row" aria-label="Preset domains">
+        <button class="chip" data-domain="bornova.bel.tr">bornova.bel.tr</button>
         <button class="chip" data-domain="github.com">github.com</button>
         <button class="chip" data-domain="anthropic.com">anthropic.com</button>
         <button class="chip" data-domain="cloudflare.com">cloudflare.com</button>
@@ -476,10 +267,7 @@
     const MAX_CERT_ROWS = 120;
     const MAX_SUBDOMAIN_BADGES = 500;
 
-    const state = {
-      logs: [],
-      scanStartedAt: null
-    };
+    const state = { logs: [], scanStartedAt: null };
 
     function tickClock() {
       const now = new Date();
@@ -490,23 +278,16 @@
 
     function escapeHTML(value) {
       return String(value ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+        .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
     }
 
     function cleanDomain(raw) {
       const value = String(raw || '').trim().toLowerCase();
       if (!value) return '';
       let stripped = value
-        .replace(/^https?:\/\//, '')
-        .replace(/^www\./, '')
-        .split('/')[0]
-        .split('?')[0]
-        .split('#')[0]
-        .replace(/\.$/, '');
+        .replace(/^https?:\/\//, '').replace(/^www\./, '')
+        .split('/')[0].split('?')[0].split('#')[0].replace(/\.$/, '');
       if (stripped.includes('@')) stripped = stripped.split('@').pop();
       const valid = /^(?!-)(?:[a-z0-9-]{1,63}\.)+[a-z]{2,63}$/.test(stripped)
         && !stripped.split('.').some(label => label.startsWith('-') || label.endsWith('-'));
@@ -516,7 +297,7 @@
     function log(line, type = '') {
       const stamp = state.scanStartedAt ? `${String(Math.floor((performance.now() - state.scanStartedAt) / 1000)).padStart(2, '0')}s` : '00s';
       state.logs.push({ line: `[${stamp}] ${line}`, type });
-      state.logs = state.logs.slice(-90);
+      state.logs = state.logs.slice(-120);
       consoleBox.innerHTML = state.logs.map(item => `<div class="console-line ${escapeHTML(item.type)}">${escapeHTML(item.line)}</div>`).join('');
       consoleBox.scrollTop = consoleBox.scrollHeight;
     }
@@ -526,46 +307,76 @@
     }
 
     function normalizeHost(host) {
-      return String(host || '')
-        .toLowerCase()
-        .replace(/^\*\./, '')
-        .replace(/\.$/, '')
-        .trim();
+      return String(host || '').toLowerCase().replace(/^\*\./, '').replace(/\.$/, '').trim();
     }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       NETWORK LAYER — fetch with retry + multi-proxy fallback
+       ═══════════════════════════════════════════════════════════════ */
 
     async function fetchDirect(url, timeoutMs = 12000, options = {}) {
       const response = await fetch(url, {
         ...options,
         signal: AbortSignal.timeout(timeoutMs),
-        cache: 'no-store'
+        cache: 'no-store',
       });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {
+        const err = new Error(`HTTP ${response.status}`);
+        err.status = response.status;
+        err.response = response;
+        throw err;
+      }
       return response;
     }
 
+    /* Cache-busting: append a unique timestamp/nonce to bypass any
+       intermediate proxy caches that might be returning stale errors. */
+    function withCacheBust(url) {
+      const sep = url.includes('?') ? '&' : '?';
+      return `${url}${sep}_cb=${Date.now()}${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    /* Six proxy candidates — direct first, then five public proxies.
+       More candidates = higher chance one of them isn't blocked / rate-limited. */
     function proxyCandidates(url) {
+      const busted = withCacheBust(url);
       return [
-        { name: 'direct', url },
-        { name: 'corsproxy.io', url: `https://corsproxy.io/?url=${encodeURIComponent(url)}` },
-        { name: 'allorigins.win', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
-        { name: 'thingproxy.freeboard.io', url: `https://thingproxy.freeboard.io/fetch/${url}` }
+        { name: 'direct', url: busted },
+        { name: 'corsproxy.io', url: `https://corsproxy.io/?url=${encodeURIComponent(busted)}` },
+        { name: 'allorigins.win', url: `https://api.allorigins.win/raw?url=${encodeURIComponent(busted)}` },
+        { name: 'codetabs', url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(busted)}` },
+        { name: 'proxy.cors.sh', url: `https://proxy.cors.sh/${busted}` },
+        { name: 'thingproxy', url: `https://thingproxy.freeboard.io/fetch/${busted}` },
       ];
     }
 
+    /* Smart fetch with rate-limit-aware retry. If we get HTTP 429 from a 
+       provider, wait and try again before falling through to next proxy. */
     async function fetchWithFallback(url, timeoutMs = 12000, options = {}) {
       const errors = [];
       for (const candidate of proxyCandidates(url)) {
-        try {
-          const response = await fetchDirect(candidate.url, timeoutMs, options);
-          return {
-            response,
-            viaProxy: candidate.name !== 'direct',
-            proxyName: candidate.name,
-            attemptedURL: candidate.url,
-            previousErrors: errors
-          };
-        } catch (error) {
-          errors.push(`${candidate.name}: ${error.message}`);
+        for (let attempt = 1; attempt <= 2; attempt++) {
+          try {
+            const response = await fetchDirect(candidate.url, timeoutMs, options);
+            return {
+              response,
+              viaProxy: candidate.name !== 'direct',
+              proxyName: candidate.name,
+              attemptedURL: candidate.url,
+              previousErrors: errors,
+            };
+          } catch (error) {
+            const tag = attempt === 1 ? candidate.name : `${candidate.name} (retry)`;
+            errors.push(`${tag}: ${error.message}`);
+            // For 429 specifically, back off before retry
+            if (error.status === 429 && attempt === 1) {
+              await sleep(800 + Math.random() * 600);
+              continue;
+            }
+            break; // move on to next candidate
+          }
         }
       }
       throw new Error(errors.join(' | ') || 'request failed');
@@ -573,13 +384,22 @@
 
     async function getJSON(url, timeoutMs = 12000, options = {}) {
       const { response, viaProxy, proxyName } = await fetchWithFallback(url, timeoutMs, options);
-      return { data: await response.json(), viaProxy, proxyName };
+      const text = await response.text();
+      try {
+        return { data: JSON.parse(text), viaProxy, proxyName };
+      } catch (e) {
+        throw new Error(`invalid JSON via ${proxyName}: ${text.slice(0, 80)}`);
+      }
     }
 
     async function getText(url, timeoutMs = 12000, options = {}) {
       const { response, viaProxy, proxyName } = await fetchWithFallback(url, timeoutMs, options);
       return { text: await response.text(), response, viaProxy, proxyName };
     }
+
+    /* ═══════════════════════════════════════════════════════════════
+       DATA SOURCES
+       ═══════════════════════════════════════════════════════════════ */
 
     async function fetchDNS(domain) {
       const records = [];
@@ -589,13 +409,7 @@
           const url = `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`;
           const { data } = await getJSON(url, 12000);
           const answers = Array.isArray(data.Answer) ? data.Answer : [];
-          answers.forEach(answer => records.push({
-            type,
-            name: answer.name || domain,
-            ttl: answer.TTL ?? '',
-            data: answer.data || '',
-            status: data.Status ?? 0
-          }));
+          answers.forEach(answer => records.push({ type, name: answer.name || domain, ttl: answer.TTL ?? '', data: answer.data || '', status: data.Status ?? 0 }));
           log(`› dns ${type}: ${answers.length} record(s)`);
         } catch (error) {
           errors.push(`${type}: ${error.message}`);
@@ -605,31 +419,49 @@
       return { records, errors };
     }
 
+    /* crt.sh — with retry + alternative query format on first failure */
     async function fetchCrtSh(domain) {
-      try {
-        log('›   → crt.sh certificate transparency...');
-        log('›     crt.sh can be slow; using a hard 30s timeout...', 'warn');
-        const url = `https://crt.sh/?q=%25.${encodeURIComponent(domain)}&output=json`;
-        const { data } = await getJSON(url, 30000);
-        const rows = Array.isArray(data) ? data : [];
-        const certs = rows.map(row => ({
-          commonName: row.common_name || '',
-          issuer: row.issuer_name || '',
-          notBefore: row.not_before || '',
-          notAfter: row.not_after || '',
-          nameValue: row.name_value || ''
-        }));
-        const subs = [];
-        rows.forEach(row => String(row.name_value || '').split(/\n|,/).forEach(name => {
-          const host = normalizeHost(name);
-          if (host.endsWith(`.${domain}`) || host === domain) subs.push(host);
-        }));
-        log(`›     found ${unique(subs).length} subs, ${rows.length} cert rows`);
-        return { subs: unique(subs), certs, error: null };
-      } catch (error) {
-        log(`›     crt.sh failed: ${error.message}`, 'warn');
-        return { subs: [], certs: [], error: error.message };
+      log('›   → crt.sh certificate transparency...');
+      log('›     crt.sh can be slow; trying multiple query formats with retry...', 'info');
+
+      // Try 3 different query formats — sometimes one works when the others 5xx
+      const queries = [
+        `https://crt.sh/?q=%25.${encodeURIComponent(domain)}&output=json`,
+        `https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`,
+        `https://crt.sh/?Identity=%25.${encodeURIComponent(domain)}&output=json`,
+      ];
+
+      for (let i = 0; i < queries.length; i++) {
+        try {
+          log(`›     attempt ${i + 1}/3...`);
+          const { data } = await getJSON(queries[i], 35000);
+          const rows = Array.isArray(data) ? data : [];
+          if (!rows.length && i < queries.length - 1) {
+            log(`›     attempt ${i + 1}: empty response, trying alternate format`, 'warn');
+            await sleep(800);
+            continue;
+          }
+          const certs = rows.map(row => ({
+            commonName: row.common_name || '',
+            issuer: row.issuer_name || '',
+            notBefore: row.not_before || '',
+            notAfter: row.not_after || '',
+            nameValue: row.name_value || ''
+          }));
+          const subs = [];
+          rows.forEach(row => String(row.name_value || '').split(/\n|,/).forEach(name => {
+            const host = normalizeHost(name);
+            if (host.endsWith(`.${domain}`) || host === domain) subs.push(host);
+          }));
+          log(`›     ✓ crt.sh succeeded: ${unique(subs).length} subs, ${rows.length} cert rows`, 'ok');
+          return { subs: unique(subs), certs, error: null };
+        } catch (error) {
+          log(`›     attempt ${i + 1} failed: ${error.message.slice(0, 100)}`, 'warn');
+          if (i < queries.length - 1) await sleep(1200);
+        }
       }
+      log(`›     ✗ crt.sh exhausted all attempts`, 'err');
+      return { subs: [], certs: [], error: 'all crt.sh query formats failed' };
     }
 
     async function fetchHackerTarget(domain) {
@@ -639,27 +471,44 @@
         const { text } = await getText(url, 15000);
         if (/error|invalid|API count exceeded/i.test(text)) throw new Error(text.slice(0, 120));
         const subs = text.split('\n').map(line => normalizeHost(line.split(',')[0])).filter(host => host === domain || host.endsWith(`.${domain}`));
-        log(`›     found ${unique(subs).length} subs`);
+        log(`›     ✓ HackerTarget: ${unique(subs).length} subs`, 'ok');
         return { subs: unique(subs), error: null };
       } catch (error) {
-        log(`›     HackerTarget failed: ${error.message}`, 'warn');
+        log(`›     ✗ HackerTarget failed: ${error.message.slice(0, 100)}`, 'warn');
         return { subs: [], error: error.message };
       }
     }
 
+    /* AlienVault OTX with explicit 429 handling and exponential backoff */
     async function fetchAlienVault(domain) {
-      try {
-        log('›   → alienvault otx passive dns...');
-        const url = `https://otx.alienvault.com/api/v1/indicators/domain/${encodeURIComponent(domain)}/passive_dns`;
-        const { data } = await getJSON(url, 15000);
-        const rows = Array.isArray(data.passive_dns) ? data.passive_dns : [];
-        const subs = rows.map(row => normalizeHost(row.hostname || row.address || '')).filter(host => host === domain || host.endsWith(`.${domain}`));
-        log(`›     found ${unique(subs).length} subs`);
-        return { subs: unique(subs), rows, error: null };
-      } catch (error) {
-        log(`›     AlienVault OTX failed: ${error.message}`, 'warn');
-        return { subs: [], rows: [], error: error.message };
+      log('›   → alienvault otx passive dns...');
+      const url = `https://otx.alienvault.com/api/v1/indicators/domain/${encodeURIComponent(domain)}/passive_dns`;
+
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          if (attempt > 1) {
+            const backoff = Math.min(2000 * attempt, 5000);
+            log(`›     OTX attempt ${attempt}/3 after ${backoff}ms backoff...`, 'info');
+            await sleep(backoff);
+          }
+          const { data } = await getJSON(url, 15000);
+          const rows = Array.isArray(data.passive_dns) ? data.passive_dns : [];
+          const subs = rows.map(row => normalizeHost(row.hostname || row.address || '')).filter(host => host === domain || host.endsWith(`.${domain}`));
+          log(`›     ✓ OTX: ${unique(subs).length} subs`, 'ok');
+          return { subs: unique(subs), rows, error: null };
+        } catch (error) {
+          const is429 = /429/.test(error.message);
+          if (is429 && attempt < 3) {
+            log(`›     OTX rate-limited (429), backing off...`, 'warn');
+            continue;
+          }
+          if (attempt === 3) {
+            log(`›     ✗ OTX exhausted retries: ${error.message.slice(0, 100)}`, 'warn');
+            return { subs: [], rows: [], error: error.message };
+          }
+        }
       }
+      return { subs: [], rows: [], error: 'all retries failed' };
     }
 
     async function fetchSubdomains(domain) {
@@ -678,7 +527,9 @@
         log('› [03] querying rdap / whois intelligence...');
         const url = `https://rdap.org/domain/${encodeURIComponent(domain)}`;
         const { data } = await getJSON(url, 15000);
-        if (!data || data.errorCode || data.rdapConformance === undefined && !data.objectClassName) throw new Error('empty rdap response');
+        if (!data || data.errorCode || (data.rdapConformance === undefined && !data.objectClassName)) {
+          throw new Error('empty rdap response');
+        }
         return { mode: 'rdap', data, synthesized: false, error: null };
       } catch (error) {
         const ns = dnsRecords.filter(r => r.type === 'NS').map(r => r.data);
@@ -687,21 +538,16 @@
         const serial = soa?.data?.split(/\s+/)[2] || '';
         log('›     no public rdap response; synthesizing from DNS data', 'warn');
         return {
-          mode: 'synthesized',
-          synthesized: true,
-          error: error.message,
+          mode: 'synthesized', synthesized: true, error: error.message,
           data: { domain, nameservers: ns, primaryNS, soa: soa?.data || '', serial }
         };
       }
     }
 
-    function compactError(message) {
-      return String(message || '').replace(/\s+/g, ' ').slice(0, 180);
-    }
+    function compactError(message) { return String(message || '').replace(/\s+/g, ' ').slice(0, 180); }
 
     async function fetchIPInfoFor(ip) {
       const attempts = [];
-
       async function tryProvider(label, url, mapper, timeoutMs = 10000, useFallback = false) {
         try {
           const result = useFallback ? await getJSON(url, timeoutMs) : { data: await (await fetchDirect(url, timeoutMs)).json() };
@@ -713,66 +559,27 @@
           return null;
         }
       }
-
       const ipwho = await tryProvider('ipwho.is', `https://ipwho.is/${encodeURIComponent(ip)}`, data => {
         if (!data || data.success === false) return { error: data?.message || 'no data' };
-        return {
-          asn: data.connection?.asn || '',
-          org: data.connection?.org || data.connection?.isp || '',
-          country: data.country || '',
-          city: data.city || '',
-          region: data.region || '',
-          timezone: data.timezone?.id || '',
-          latitude: data.latitude || '',
-          longitude: data.longitude || ''
-        };
+        return { asn: data.connection?.asn || '', org: data.connection?.org || data.connection?.isp || '', country: data.country || '', city: data.city || '', region: data.region || '', timezone: data.timezone?.id || '', latitude: data.latitude || '', longitude: data.longitude || '' };
       });
       if (ipwho) return ipwho;
 
       const ipapi = await tryProvider('ipapi.co', `https://ipapi.co/${encodeURIComponent(ip)}/json/`, data => {
         if (!data || data.error) return { error: data?.reason || data?.message || 'no data' };
-        return {
-          asn: data.asn || '',
-          org: data.org || data.network || '',
-          country: data.country_name || data.country || '',
-          city: data.city || '',
-          region: data.region || '',
-          timezone: data.timezone || '',
-          latitude: data.latitude || '',
-          longitude: data.longitude || ''
-        };
+        return { asn: data.asn || '', org: data.org || data.network || '', country: data.country_name || data.country || '', city: data.city || '', region: data.region || '', timezone: data.timezone || '', latitude: data.latitude || '', longitude: data.longitude || '' };
       });
       if (ipapi) return ipapi;
 
       const ipwhoisApp = await tryProvider('ipwhois.app', `https://ipwhois.app/json/${encodeURIComponent(ip)}`, data => {
         if (!data || data.success === false) return { error: data?.message || 'no data' };
-        return {
-          asn: data.asn || '',
-          org: data.org || data.isp || '',
-          country: data.country || '',
-          city: data.city || '',
-          region: data.region || '',
-          timezone: data.timezone || '',
-          latitude: data.latitude || '',
-          longitude: data.longitude || ''
-        };
+        return { asn: data.asn || '', org: data.org || data.isp || '', country: data.country || '', city: data.city || '', region: data.region || '', timezone: data.timezone || '', latitude: data.latitude || '', longitude: data.longitude || '' };
       });
       if (ipwhoisApp) return ipwhoisApp;
 
-      // Last resort: free ip-api is HTTP-only, so it often fails on GitHub Pages because of mixed-content rules.
-      // We keep it behind proxies as a best-effort fallback, but HTTPS providers above are preferred.
       const ipApi = await tryProvider('ip-api.com via proxy', `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,message,country,regionName,city,lat,lon,timezone,as,org,query`, data => {
         if (!data || data.status !== 'success') return { error: data?.message || 'ip-api failed' };
-        return {
-          asn: data.as || '',
-          org: data.org || '',
-          country: data.country || '',
-          city: data.city || '',
-          region: data.regionName || '',
-          timezone: data.timezone || '',
-          latitude: data.lat || '',
-          longitude: data.lon || ''
-        };
+        return { asn: data.as || '', org: data.org || '', country: data.country || '', city: data.city || '', region: data.regionName || '', timezone: data.timezone || '', latitude: data.lat || '', longitude: data.lon || '' };
       }, 10000, true);
       if (ipApi) return ipApi;
 
@@ -783,7 +590,7 @@
       log('› [04] enriching resolved IPs with geo / ASN context...');
       const ips = unique(dnsRecords.filter(r => r.type === 'A' || r.type === 'AAAA').map(r => r.data));
       const rows = await Promise.all(ips.map(fetchIPInfoFor));
-      log(`›     enriched ${rows.filter(r => !r.error).length}/${ips.length} IP address(es)`);
+      log(`›     enriched ${rows.filter(r => !r.error).length}/${ips.length} IP address(es)`, 'ok');
       return { ips, rows };
     }
 
@@ -836,36 +643,37 @@
       return [...map.values()].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
     }
 
+    /* HTTP fingerprint with multiple URL variations + UA spoofing through 
+       proxies that support it (some Cloudflare-protected sites respond
+       differently to non-browser UAs). */
     async function fetchHTTPFingerprint(domain) {
       log('› [05] fingerprinting HTTP surface...');
-      const candidates = [`https://${domain}`, `http://${domain}`];
+      // Try www variant too — sometimes apex blocks but www works (or vice versa)
+      const candidates = [
+        `https://${domain}`,
+        `https://www.${domain}`,
+        `http://${domain}`,
+      ];
       let lastError = '';
       for (const url of candidates) {
         try {
+          log(`›     trying ${url}...`);
           const { text, response, viaProxy, proxyName } = await getText(url, 18000, { redirect: 'follow' });
           const headers = headersToObject(response.headers);
           const technologies = detectTechnologies(headers, text.slice(0, 600000), response.url || url);
-          log(`›     ${url} responded: HTTP ${response.status}; tech signatures: ${technologies.length}${viaProxy ? ` (via ${proxyName})` : ''}`);
-          return {
-            ok: true,
-            attemptedURL: url,
-            finalURL: response.url || url,
-            status: response.status,
-            statusText: response.statusText,
-            viaProxy,
-            proxyName,
-            headers,
-            technologies,
-            bodySize: text.length,
-            error: null
-          };
+          log(`›     ✓ ${url}: HTTP ${response.status}, ${technologies.length} tech signatures${viaProxy ? ` (via ${proxyName})` : ''}`, 'ok');
+          return { ok: true, attemptedURL: url, finalURL: response.url || url, status: response.status, statusText: response.statusText, viaProxy, proxyName, headers, technologies, bodySize: text.length, error: null };
         } catch (error) {
           lastError = error.message;
-          log(`›     ${url} failed: ${error.message}`, 'warn');
+          log(`›     ✗ ${url} failed`, 'warn');
         }
       }
       return { ok: false, headers: {}, technologies: [], error: lastError, finalURL: '', status: '', statusText: '' };
     }
+
+    /* ═══════════════════════════════════════════════════════════════
+       RENDERING
+       ═══════════════════════════════════════════════════════════════ */
 
     function pill(text, cls = '') { return `<span class="pill ${cls}">${escapeHTML(text)}</span>`; }
 
@@ -890,13 +698,7 @@
     }
 
     function moduleShell(title, source, body) {
-      return `
-        <div class="module-head">
-          <h2 class="module-title">${escapeHTML(title)}</h2>
-          <div class="source">${escapeHTML(source)}</div>
-        </div>
-        ${body}
-      `;
+      return `<div class="module-head"><h2 class="module-title">${escapeHTML(title)}</h2><div class="source">${escapeHTML(source)}</div></div>${body}`;
     }
 
     function renderWhois(data) {
@@ -914,7 +716,6 @@
         `);
         return;
       }
-
       const rdap = w.data || {};
       const events = Array.isArray(rdap.events) ? rdap.events : [];
       const entities = Array.isArray(rdap.entities) ? rdap.entities : [];
@@ -926,7 +727,6 @@
         const fn = vcard.find(item => item[0] === 'fn')?.[3] || '';
         return [roles, fn].filter(Boolean).join(': ');
       }).filter(Boolean).slice(0, 5);
-
       $('#whoisModule').innerHTML = moduleShell('domain intelligence', 'rdap.org/domain', `
         <dl class="kv">
           <dt>handle</dt><dd>${escapeHTML(rdap.handle || 'unknown')}</dd>
@@ -945,15 +745,13 @@
         <div class="table-scroll">
           <table>
             <thead><tr><th>IP</th><th>ASN / org</th><th>location</th><th>source</th></tr></thead>
-            <tbody>
-              ${rows.map(row => `
-                <tr>
-                  <td>${escapeHTML(row.ip)}</td>
-                  <td>${row.error ? `<span class="pill red">lookup failed</span><br>${escapeHTML(row.error)}` : `${escapeHTML(row.asn || 'unknown')}<br>${escapeHTML(row.org || '')}`}</td>
-                  <td>${escapeHTML([row.city, row.region, row.country].filter(Boolean).join(', ') || 'unknown')}<br><span style="color:var(--dim)">${escapeHTML(row.timezone || '')}</span></td>
-                  <td>${escapeHTML(row.source || '')}</td>
-                </tr>
-              `).join('')}
+            <tbody>${rows.map(row => `
+              <tr>
+                <td>${escapeHTML(row.ip)}</td>
+                <td>${row.error ? `<span class="pill red">lookup failed</span><br>${escapeHTML(row.error)}` : `${escapeHTML(row.asn || 'unknown')}<br>${escapeHTML(row.org || '')}`}</td>
+                <td>${escapeHTML([row.city, row.region, row.country].filter(Boolean).join(', ') || 'unknown')}<br><span style="color:var(--dim)">${escapeHTML(row.timezone || '')}</span></td>
+                <td>${escapeHTML(row.source || '')}</td>
+              </tr>`).join('')}
             </tbody>
           </table>
         </div>` : '<div class="empty">no A/AAAA records resolved; network footprint unavailable</div>';
@@ -973,14 +771,7 @@
         <div class="table-scroll">
           <table>
             <thead><tr><th>type</th><th>name</th><th>ttl</th><th>value</th></tr></thead>
-            <tbody>${rows.map(r => `
-              <tr>
-                <td>${pill(r.type, dnsClass(r.type))}</td>
-                <td>${escapeHTML(r.name)}</td>
-                <td>${escapeHTML(r.ttl)}</td>
-                <td>${escapeHTML(r.data)}</td>
-              </tr>
-            `).join('')}</tbody>
+            <tbody>${rows.map(r => `<tr><td>${pill(r.type, dnsClass(r.type))}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.ttl)}</td><td>${escapeHTML(r.data)}</td></tr>`).join('')}</tbody>
           </table>
         </div>` : '<div class="empty">no dns answers returned by dns.google</div>';
       $('#dnsModule').innerHTML = moduleShell('dns records', 'dns.google DoH JSON API', body);
@@ -991,7 +782,7 @@
       const cls = ok ? '' : 'amber';
       const detail = ok
         ? `${label}: ok${Array.isArray(source?.subs) ? ` / ${source.subs.length} host(s)` : ''}`
-        : `${label}: limited / ${source.error}`;
+        : `${label}: limited`;
       return pill(detail, cls);
     }
 
@@ -999,22 +790,14 @@
       const subs = data.subdomains.subs || [];
       const visible = subs.slice(0, MAX_SUBDOMAIN_BADGES);
       const overflow = subs.length > visible.length ? `<div class="notice">Showing ${visible.length} of ${subs.length} discovered subdomains to keep the browser responsive.</div>` : '';
-      const sourceStatus = `
-        <div class="notice" style="margin-bottom:12px">
-          Passive-source status: ${sourcePill('crt.sh', data.subdomains.crt)} ${sourcePill('HackerTarget', data.subdomains.hackerTarget)} ${sourcePill('AlienVault OTX', data.subdomains.alienVault)}
-        </div>`;
-      const body = subs.length ? `
-        ${sourceStatus}
-        ${overflow}
-        <div class="badges">${visible.map(s => pill(s, s === data.domain ? 'target' : '')).join('')}</div>
-      ` : `${sourceStatus}<div class="empty">no subdomains returned from passive sources</div>`;
+      const sourceStatus = `<div class="notice" style="margin-bottom:12px">Passive-source status: ${sourcePill('crt.sh', data.subdomains.crt)} ${sourcePill('HackerTarget', data.subdomains.hackerTarget)} ${sourcePill('AlienVault OTX', data.subdomains.alienVault)}</div>`;
+      const body = subs.length
+        ? `${sourceStatus}${overflow}<div class="badges">${visible.map(s => pill(s, s === data.domain ? 'target' : '')).join('')}</div>`
+        : `${sourceStatus}<div class="empty">no subdomains returned from passive sources</div>`;
       $('#subdomainModule').innerHTML = moduleShell('subdomain enumeration', 'crt.sh + HackerTarget + AlienVault OTX', body);
     }
 
-    function isExpired(dateText) {
-      const time = Date.parse(dateText);
-      return Number.isFinite(time) && time < Date.now();
-    }
+    function isExpired(dateText) { const time = Date.parse(dateText); return Number.isFinite(time) && time < Date.now(); }
 
     function renderCerts(data) {
       const certs = data.subdomains.certs || [];
@@ -1026,27 +809,17 @@
             <thead><tr><th>common name</th><th>issuer</th><th>not before</th><th>not after</th><th>status</th></tr></thead>
             <tbody>${rows.map(c => {
               const expired = isExpired(c.notAfter);
-              return `<tr>
-                <td>${escapeHTML(c.commonName || c.nameValue || 'unknown')}</td>
-                <td>${escapeHTML(c.issuer || 'unknown')}</td>
-                <td>${escapeHTML(c.notBefore || 'unknown')}</td>
-                <td>${escapeHTML(c.notAfter || 'unknown')}</td>
-                <td>${pill(expired ? 'expired' : 'valid / unexpired', expired ? 'red' : '')}</td>
-              </tr>`;
+              return `<tr><td>${escapeHTML(c.commonName || c.nameValue || 'unknown')}</td><td>${escapeHTML(c.issuer || 'unknown')}</td><td>${escapeHTML(c.notBefore || 'unknown')}</td><td>${escapeHTML(c.notAfter || 'unknown')}</td><td>${pill(expired ? 'expired' : 'valid / unexpired', expired ? 'red' : '')}</td></tr>`;
             }).join('')}</tbody>
           </table>
-        </div>` : `<div class="empty">no certificates returned from crt.sh${data.subdomains.crt?.error ? ` — ${escapeHTML(data.subdomains.crt.error)}` : ''}</div>`;
+        </div>` : `<div class="empty">no certificates returned from crt.sh${data.subdomains.crt?.error ? ' (all retry attempts exhausted)' : ''}</div>`;
       $('#certModule').innerHTML = moduleShell('tls / certificate transparency', 'crt.sh output=json', body);
     }
 
     function renderHTTP(data) {
       const http = data.http;
       const headerRows = Object.entries(http.headers || {});
-      const techByCat = http.technologies.reduce((acc, tech) => {
-        acc[tech.category] ||= [];
-        acc[tech.category].push(tech.name);
-        return acc;
-      }, {});
+      const techByCat = http.technologies.reduce((acc, tech) => { acc[tech.category] ||= []; acc[tech.category].push(tech.name); return acc; }, {});
       const techHTML = Object.keys(techByCat).length
         ? Object.entries(techByCat).map(([cat, names]) => `<div style="margin-bottom:8px"><span style="color:var(--green-dim);font-size:11px;text-transform:uppercase;letter-spacing:.1em">${escapeHTML(cat)}</span><br>${names.map(n => pill(n)).join('')}</div>`).join('')
         : '<div class="empty">no technology signatures detected</div>';
@@ -1067,16 +840,14 @@
           </table>
         </div>
       ` : `
-        <div class="notice" style="margin-bottom:12px">
-          The target was reachable for DNS/passive intelligence, but its web surface could not be read from this browser session. This is usually caused by CORS, TLS policy, bot protection, proxy blocking, or the remote server refusing browser-origin requests.
-        </div>
+        <div class="notice" style="margin-bottom:12px">The target was reachable for DNS/passive intelligence, but its web surface could not be read from this browser session. This is usually caused by Cloudflare bot protection blocking data-center proxy IPs, CORS, TLS policy, or the remote server refusing browser-origin requests.</div>
         <dl class="kv">
           <dt>status</dt><dd>${pill('web fingerprint blocked / unavailable', 'amber')}</dd>
-          <dt>attempted</dt><dd>https://${escapeHTML(data.domain)} → http://${escapeHTML(data.domain)}</dd>
-          <dt>last error</dt><dd>${escapeHTML(http.error || 'request failed')}</dd>
+          <dt>attempted</dt><dd>https://${escapeHTML(data.domain)} → https://www.${escapeHTML(data.domain)} → http://${escapeHTML(data.domain)}</dd>
+          <dt>last error</dt><dd style="font-size:11px;opacity:0.8">${escapeHTML((http.error || 'request failed').slice(0, 300))}</dd>
           <dt>next best data</dt><dd>Use DNS records, certificate transparency rows, ASN/geo enrichment, and passive subdomains shown above.</dd>
         </dl>`;
-      $('#httpModule').innerHTML = moduleShell('http fingerprint', 'direct fetch → multi-proxy fallback', body);
+      $('#httpModule').innerHTML = moduleShell('http fingerprint', 'direct fetch → 6-proxy fallback', body);
     }
 
     function renderAll(data) {
@@ -1107,7 +878,7 @@
       loadingWrap.classList.add('active');
       consoleBox.innerHTML = '';
 
-      log(`› target locked: ${domain}`);
+      log(`› target locked: ${domain}`, 'info');
       log('› [01] resolving dns records via dns.google...');
 
       const dnsPromise = fetchDNS(domain);
@@ -1122,7 +893,7 @@
 
       const data = { domain, dns, subdomains, http, whois, network };
       renderAll(data);
-      log('› scan complete.');
+      log('› scan complete.', 'ok');
 
       scanBtn.disabled = false;
       input.disabled = false;
@@ -1130,14 +901,9 @@
     }
 
     scanBtn.addEventListener('click', () => runScan(input.value));
-    input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') runScan(input.value);
-    });
+    input.addEventListener('keydown', (event) => { if (event.key === 'Enter') runScan(input.value); });
     document.querySelectorAll('[data-domain]').forEach(button => {
-      button.addEventListener('click', () => {
-        input.value = button.dataset.domain;
-        runScan(button.dataset.domain);
-      });
+      button.addEventListener('click', () => { input.value = button.dataset.domain; runScan(button.dataset.domain); });
     });
   </script>
 </body>
