@@ -695,46 +695,88 @@
       }
     }
 
+    function compactError(message) {
+      return String(message || '').replace(/\s+/g, ' ').slice(0, 180);
+    }
+
     async function fetchIPInfoFor(ip) {
-      try {
-        const first = await fetchDirect(`https://ipwho.is/${encodeURIComponent(ip)}`, 10000);
-        const data = await first.json();
-        if (data && data.success !== false) {
-          return {
-            ip,
-            source: 'ipwho.is',
-            asn: data.connection?.asn || '',
-            org: data.connection?.org || data.connection?.isp || '',
-            country: data.country || '',
-            city: data.city || '',
-            region: data.region || '',
-            timezone: data.timezone?.id || '',
-            latitude: data.latitude || '',
-            longitude: data.longitude || ''
-          };
-        }
-        throw new Error(data.message || 'ipwho.is returned no data');
-      } catch (firstError) {
+      const attempts = [];
+
+      async function tryProvider(label, url, mapper, timeoutMs = 10000, useFallback = false) {
         try {
-          const url = `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,message,country,regionName,city,lat,lon,timezone,as,org,query`;
-          const { data } = await getJSON(url, 10000);
-          if (data.status !== 'success') throw new Error(data.message || 'ip-api failed');
-          return {
-            ip,
-            source: 'ip-api.com via proxy',
-            asn: data.as || '',
-            org: data.org || '',
-            country: data.country || '',
-            city: data.city || '',
-            region: data.regionName || '',
-            timezone: data.timezone || '',
-            latitude: data.lat || '',
-            longitude: data.lon || ''
-          };
-        } catch (secondError) {
-          return { ip, source: 'unresolved', error: `${firstError.message}; ${secondError.message}` };
+          const result = useFallback ? await getJSON(url, timeoutMs) : { data: await (await fetchDirect(url, timeoutMs)).json() };
+          const mapped = mapper(result.data || {});
+          if (!mapped || mapped.error) throw new Error(mapped?.error || 'empty response');
+          return { ...mapped, ip, source: label };
+        } catch (error) {
+          attempts.push(`${label}: ${compactError(error.message)}`);
+          return null;
         }
       }
+
+      const ipwho = await tryProvider('ipwho.is', `https://ipwho.is/${encodeURIComponent(ip)}`, data => {
+        if (!data || data.success === false) return { error: data?.message || 'no data' };
+        return {
+          asn: data.connection?.asn || '',
+          org: data.connection?.org || data.connection?.isp || '',
+          country: data.country || '',
+          city: data.city || '',
+          region: data.region || '',
+          timezone: data.timezone?.id || '',
+          latitude: data.latitude || '',
+          longitude: data.longitude || ''
+        };
+      });
+      if (ipwho) return ipwho;
+
+      const ipapi = await tryProvider('ipapi.co', `https://ipapi.co/${encodeURIComponent(ip)}/json/`, data => {
+        if (!data || data.error) return { error: data?.reason || data?.message || 'no data' };
+        return {
+          asn: data.asn || '',
+          org: data.org || data.network || '',
+          country: data.country_name || data.country || '',
+          city: data.city || '',
+          region: data.region || '',
+          timezone: data.timezone || '',
+          latitude: data.latitude || '',
+          longitude: data.longitude || ''
+        };
+      });
+      if (ipapi) return ipapi;
+
+      const ipwhoisApp = await tryProvider('ipwhois.app', `https://ipwhois.app/json/${encodeURIComponent(ip)}`, data => {
+        if (!data || data.success === false) return { error: data?.message || 'no data' };
+        return {
+          asn: data.asn || '',
+          org: data.org || data.isp || '',
+          country: data.country || '',
+          city: data.city || '',
+          region: data.region || '',
+          timezone: data.timezone || '',
+          latitude: data.latitude || '',
+          longitude: data.longitude || ''
+        };
+      });
+      if (ipwhoisApp) return ipwhoisApp;
+
+      // Last resort: free ip-api is HTTP-only, so it often fails on GitHub Pages because of mixed-content rules.
+      // We keep it behind proxies as a best-effort fallback, but HTTPS providers above are preferred.
+      const ipApi = await tryProvider('ip-api.com via proxy', `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,message,country,regionName,city,lat,lon,timezone,as,org,query`, data => {
+        if (!data || data.status !== 'success') return { error: data?.message || 'ip-api failed' };
+        return {
+          asn: data.as || '',
+          org: data.org || '',
+          country: data.country || '',
+          city: data.city || '',
+          region: data.regionName || '',
+          timezone: data.timezone || '',
+          latitude: data.lat || '',
+          longitude: data.lon || ''
+        };
+      }, 10000, true);
+      if (ipApi) return ipApi;
+
+      return { ip, source: 'unresolved', error: attempts.join(' | ') || 'all lookup providers failed' };
     }
 
     async function fetchNetworkFootprint(dnsRecords) {
@@ -915,7 +957,7 @@
             </tbody>
           </table>
         </div>` : '<div class="empty">no A/AAAA records resolved; network footprint unavailable</div>';
-      $('#networkModule').innerHTML = moduleShell('network footprint', 'ipwho.is → ip-api.com fallback', body);
+      $('#networkModule').innerHTML = moduleShell('network footprint', 'ipwho.is → ipapi.co → ipwhois.app → ip-api fallback', body);
     }
 
     function dnsClass(type) {
